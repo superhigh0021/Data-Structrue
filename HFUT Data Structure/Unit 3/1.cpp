@@ -1,49 +1,62 @@
 #include <iostream>
 using namespace std;
-#define maxlen 10;
 
-template <typename T>
+const int M = 10;
+
+template<typename T>
 class Queue {
 public:
-    Queue();
-    bool empty() const;
-    bool full() const;
-    error_code get_front(T& x);
-    error_code append(const T& x);
-    error_code serve();
+    bool empty();
+    bool full();
+    T get_front();
+    void append(int x);
+    void serve();
 
 private:
-    int front, count, rear;
-    T data[maxlen];
+    T data[M];
+    int count = 0, count1 = 0;
+    int turn = 0;
 };
 
-template <typename T>
-Queue<T>::Queue()
-{
-    count = 0;
-    front = rear = 0;
-}
-
-template <typename T>
-bool Queue<T>::empty()
-{
-    if (front == rear)
+template<typename T>
+bool Queue<T>::empty(){
+    if (count == 0 && turn == 0)
         return true;
     return false;
 }
 
-template <typename T>
-bool Queue<T>::full()
-{
-    if (count = maxlen - 1)
+template<typename T>
+bool Queue<T>::full(){
+    if (count + 1 == count1 || (count + 1 == 11 && count1 == 0))
         return true;
     return false;
 }
 
-template <typename T>
-error_code Queue<T>::get_front()
-{
-    if (this->empty())
-        return UNDERFLOW;
-    return
+template<typename T>
+T Queue<T>::get_front(){
+    return data[count1];
+}
+
+template<typename T>
+void Queue<T>::append(int x){
+    if (full())
+        cout << "Overflow!" << endl;
+    else {
+        if (count == 10) {
+            count = 0;
+            turn++;
+        }
+        data[count] = x;
+        count++;
+    }
+}
+
+template<typename T>
+void Queue<T>::serve(){
+    if (empty())
+        cout << "Empty!";
+    else {
+        data[count1] = 0;
+        count1++;
+    }
 }

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <stack>
 using namespace std;
-
 char Compare(char a, char b) {
     int i, j;
     char Table[9][8] = {
@@ -22,7 +21,6 @@ char Compare(char a, char b) {
         if (Table[j][0] == b) break;
     return Table[j][i];
 }
-
 bool issymbol(const char& c) {
     char ptr[8] = {'+', '-', '*', '/', '(', ')', '='};
     for (int i = 0; i < 7; ++i) {
@@ -30,7 +28,6 @@ bool issymbol(const char& c) {
     }
     return 0;
 }
-
 int Execute(int a, char op, int b) {
     switch (op) {
         case '+':
