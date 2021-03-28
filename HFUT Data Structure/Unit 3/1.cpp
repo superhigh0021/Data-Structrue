@@ -1,62 +1,82 @@
 #include <iostream>
 using namespace std;
 
-const int M = 10;
-
-template<typename T>
+template <typename T>
 class Queue {
 public:
+    Queue(int size);
     bool empty();
     bool full();
-    T get_front();
-    void append(int x);
-    void serve();
+    bool get_front(T& x);
+    bool append(T const& x);
+    bool serve(T& x);
+    ~Queue()
+    {
+        delete[] data;
+    }
 
 private:
-    T data[M];
-    int count = 0, count1 = 0;
-    int turn = 0;
+    T* data;
+    int maxsize = 0, front = 0, count = 0;
 };
 
-template<typename T>
-bool Queue<T>::empty(){
-    if (count == 0 && turn == 0)
+template <typename T>
+Queue<T>::Queue(int size)
+{
+    maxsize = size;
+    data = new T[size];
+}
+
+template <typename T>
+bool Queue<T>::empty()
+{
+    if (count == 0)
         return true;
     return false;
 }
 
-template<typename T>
-bool Queue<T>::full(){
-    if (count + 1 == count1 || (count + 1 == 11 && count1 == 0))
+template <typename T>
+bool Queue<T>::full()
+{
+    if (count + 1 == maxsize)
         return true;
     return false;
 }
 
-template<typename T>
-T Queue<T>::get_front(){
-    return data[count1];
+template <typename T>
+bool Queue<T>::get_front(T& x)
+{
+    if (empty()) {
+        cout << "EMPTY!" << endl;
+        return false;
+    }
+    x = data[front];
+    front = (front + 1) % maxsize;
+    return true;
 }
 
-template<typename T>
-void Queue<T>::append(int x){
-    if (full())
+template <typename T>
+bool Queue<T>::append(T const& x)
+{
+    if (full()) {
         cout << "Overflow!" << endl;
-    else {
-        if (count == 10) {
-            count = 0;
-            turn++;
-        }
+        return false;
+    } else {
         data[count] = x;
         count++;
+        return true;
     }
 }
 
-template<typename T>
-void Queue<T>::serve(){
-    if (empty())
+template <typename T>
+bool Queue<T>::serve(T& x)
+{
+    if (empty()) {
         cout << "Empty!";
-    else {
-        data[count1] = 0;
-        count1++;
+        return false;
+    } else {
+        x = data[front];
+        front = (front + 1) % maxsize;
+        return true;
     }
 }
