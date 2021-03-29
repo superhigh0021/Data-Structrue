@@ -26,7 +26,7 @@ int search(vector<int>& nums, int target)
 int main(void)
 {
     vector<int> v1 = { 4, 5, 6, 7, 0, 1, 2 };
-    cout << search(v1, 3);
+    cout << search(v1, 3)<<endl;
 
     system("pause");
     return 0;
