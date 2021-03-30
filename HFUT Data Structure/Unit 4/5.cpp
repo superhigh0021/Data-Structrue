@@ -45,15 +45,6 @@ public:
 };
 
 template <typename T>
-LinkedList<T>::LinkedList(const T &x)
-{
-    front = new node<T>;
-    front->data = x;
-    front->next = NULL;
-    count++;
-}
-
-template <typename T>
 LinkedList<T>::LinkedList(vector<T> a, int n)
 {
     front = new node<T>;

@@ -28,14 +28,6 @@ private:
 };
 
 template <typename T>
-LinkedList<T>::LinkedList()
-{
-    head = new node<T>;
-    head->next = NULL;
-    count = 0;
-}
-
-template <typename T>
 LinkedList<T>::LinkedList(vector<T> a, int n)
 {
     head = new node<T>;
