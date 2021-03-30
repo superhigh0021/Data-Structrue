@@ -34,6 +34,7 @@ int main(void)
     List<int> l1(a, 4), l2(b, 4);
     Union(l1, l2);
     Intersection(l1,l2);
+
     system("pause");
     return 0;
 }

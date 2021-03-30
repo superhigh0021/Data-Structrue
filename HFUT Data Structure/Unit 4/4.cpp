@@ -57,7 +57,7 @@ template <typename T>
 LinkedList<T>::LinkedList(vector<T> a, int n)
 {
     front = new node<T>;
-    node<T> *p = front, *q = front;
+    node<T> *p = front;
     for (int i = 0; i < n; i++)
     {
         p->next = new node<T>;
@@ -65,7 +65,6 @@ LinkedList<T>::LinkedList(vector<T> a, int n)
         p->data = a[i];
     }
     p->next = NULL;
-    q = q->next;
     count += n;
 }
 
