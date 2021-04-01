@@ -129,16 +129,20 @@ void LinkedList<T>::PrintTest()
 template <typename T>
 void LinkedList<T>::convert()
 {
-    node<T>* current=head->next,*q=NULL,*pr;
-    head->next=NULL;
-    while(current){
-        pr=current->next;
-        current->next=q;
-        q=current;
-        current=pr;
+    node<T>*current = head->next, *q = NULL, *pr;
+    head->next = NULL;
+    while (current) {
+        pr = current->next;
+        if (pr!=NULL)
+            pr->pred = current;
+        current->next = q;
+        if (q!=NULL)
+            q->pred = current;
+        q = current;
+        current = pr;
     }
-    head->next=q;
-    q->pred=head;
+    head->next = q;
+    q->pred = head;
 }
 
 int main(void)
