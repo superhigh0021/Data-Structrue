@@ -1,4 +1,5 @@
 #include <iostream>
+#include"BinNode_macro_BASIC.h"
 #define BinNodePosi(T) BinNode<T> *
 #define stature(p) ((p) ? (p) - > height : -1)
 typedef enum { RB_RED, RB_BLACK } RBColor;

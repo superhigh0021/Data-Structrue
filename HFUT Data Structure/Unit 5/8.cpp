@@ -133,10 +133,10 @@ void LinkedList<T>::convert()
     head->next = NULL;
     while (current) {
         pr = current->next;
-        if (pr!=NULL)
+        if (pr != NULL)
             pr->pred = current;
         current->next = q;
-        if (q!=NULL)
+        if (q != NULL)
             q->pred = current;
         q = current;
         current = pr;

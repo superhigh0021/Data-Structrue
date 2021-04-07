@@ -1,13 +1,15 @@
+#include "LinkedList.h"
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
-int Mystrcmp(string s1, string s2)
+int Mystrcmp(LinkedList<char> l1, LinkedList<char> l2)
 {
-    for (int i = 0; i < s1.size() || i < s2.size();) {
-        if (s1[i] == s2[i])
+    for (int i = 0; i < l1.size() || i < l2.size();) {
+        if (l1[i] == l2[i])
             i++;
-        else if (s1[i] > s2[i])
+        else if (l1[i] > l2[i])
             return 1;
         else
             return -1;
@@ -19,8 +21,15 @@ int main(void)
 {
     string s1("ac");
     string s2("abd");
-    cout << Mystrcmp(s1, s2);
-
+    vector<char> v1;
+    vector<char> v2;
+    for (int i = 0; i < s1.size(); ++i)
+        v1.push_back(s1[i]);
+    for (int i = 0; i < s2.size(); ++i)
+        v2.push_back(s2[i]);
+    LinkedList<char> l1(v1, v1.size());
+    LinkedList<char> l2(v2, v2.size());
+    cout<<Mystrcmp(l1,l2);
     system("pause");
     return 0;
 }

@@ -45,7 +45,7 @@ template <typename T>
 T List<T>::get_element(const int &i) const
 {
     if (i < 0 || i >= count)
-        return;
+        return -1;
     return data[i];
 }
 
