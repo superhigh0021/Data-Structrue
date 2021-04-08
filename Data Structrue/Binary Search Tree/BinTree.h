@@ -4,12 +4,11 @@ using namespace std;
 
 template <typename T>
 class BinTree {
-protected:
+public:
     int _size;
     BinNodePosi(T) _root; //规模，根节点
     virtual int updateHeight(BinNodePosi(T) x); //更新节点x的高度
     void updateHeightAbove(BinNodePosi(T) x); //更新节点x及其祖先的高度
-public:
     BinTree()
         : _size(0)
         , _root(NULL)
