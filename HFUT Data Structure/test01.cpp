@@ -1,21 +1,14 @@
 #include <iostream>
 #include <tuple>
+using namespace std;
 
-static std::tuple<std::string, std::string> haha()
-{
-    std::string a = "ab";
-    std::string b = "cd";
-
-    return std::make_tuple(a, b);
-}
+#define test(x) x
 
 int main(void)
 {
-    std::string s = "abcdefg";
-    auto source = haha();
-    std::cout<<std::get<0>(source)<<std::endl;
-    std::cout<<std::get<1>(source)<<std::endl;
-
+    int i=3;
+    //int c = test(i) = 4;
+    cout<<test(i);
 
     system("pause");
     return 0;
