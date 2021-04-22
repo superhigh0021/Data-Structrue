@@ -1,15 +1,13 @@
 #include <iostream>
-#include <tuple>
 using namespace std;
-
-#define test(x) x
 
 int main(void)
 {
-    int i=3;
-    //int c = test(i) = 4;
-    cout<<test(i);
-
+    int a = 3;
+    int* b = &a;
+    *b=6;
+    cout<<a;
     system("pause");
+
     return 0;
 }
