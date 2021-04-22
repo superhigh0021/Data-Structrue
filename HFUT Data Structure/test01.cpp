@@ -3,11 +3,9 @@ using namespace std;
 
 int main(void)
 {
-    int a = 3;
-    int* b = &a;
-    *b=6;
-    cout<<a;
+    for(int i=0;i<1000000000;++i){
+        int *b=new int;
+    }
     system("pause");
-
     return 0;
 }
