@@ -114,6 +114,7 @@ void RedBlack<T>::solveDoubleBlack(BinNodePosi(T) r)
 
     // r的兄弟
     BinNodePosi(T) s = (r == p->lc) ? p->rc : p->lc;
+
     //兄弟若为黑
     if (IsBlack(s))
     {
@@ -123,13 +124,53 @@ void RedBlack<T>::solveDoubleBlack(BinNodePosi(T) r)
             t = s->rc;
         if (IsRed(r->lc))
             t = s->lc;
-        if(t){  //黑s有红孩子： BB-1
-            RBColor oldColor=p->color;//备份原子树根节点p颜色
+        if (t)
+        {
+            //黑s有红孩子： BB-1
+            RBColor oldColor = p->color; //备份原子树根节点p颜色
             //通过旋转重平衡，并将新子树的左右孩子染黑
-            BinNodePosi(T) b=FromParentTo(*p)=rotateAt(t);
-            if(HasLChild(*b)){
-                
+            BinNodePosi(T) b = FromParentTo(*p) = rotateAt(t);
+            if (HasLChild(*b))
+            {
+                b->lc->color = RB_BLACK;
+                updateHeight(b->lc); //左子
+            }
+            if (HasRChild(*b))
+            {
+                b->rc->color = RB_BLACK;
+                updateHeight(b->rc);
+            }
+            b->color = oldColor;
+            updateHeight(b);
+        }
+        else
+        {
+            //黑s无红孩子
+            s->color = RB_RED;
+            s->height--; //s转红
+            if (IsRed(p))
+            {
+                //BB-2-R
+                p->color = RB_BLACK;
+            }
+            else
+            {
+                //BB-2-B
+                p->height--;
+                solveDoubleBlack(p); //递归上溯
             }
         }
+    }
+    else
+    {
+        //兄弟s为红  BB-3
+        s->color = RB_BLACK;
+        p->color = RB_RED;
+
+        //让旋转参数t和s在同侧，一字型旋转而不是之字形旋转！！！！
+        BinNodePosi(T) t = IsLChild(*s) ? s->lc : s->rc;
+        _hot = p;
+        FromParentTo(*p) = rotateAt(t);
+        solveDoubleBlack(r);
     }
 }
