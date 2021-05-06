@@ -13,5 +13,6 @@
  ******************************************************************************************/
 #define sibling(p) (IsLChild(*(p)) ? (p)->parent->rc : (p)->parent->lc) /*兄弟*/
 #define uncle(x) (sibling((x)->parent)) /*叔叔*/
-#define FromParentTo(x) /*来自父亲的引用*/ \
-    (IsRoot(x) ? this->_root : (IsLChild(x) ? (x).parent->lc : (x).parent->rc))
+#define FromParentTo(x) \
+    (IsRoot(x) ? this->_root : \
+    (IsLChild(x) ? (x).parent->lc : (x).parent->rc))
