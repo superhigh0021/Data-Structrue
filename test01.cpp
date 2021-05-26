@@ -1,150 +1,196 @@
-#include <iostream>
-#include <stack>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include<iostream>
 using namespace std;
-stack<int> q1; //数字栈
-stack<char> q2; //符号栈
-int flag = 0; //用来判断第一位是‘-’的情况
-int flag2 = 0; //用来判断第一位是‘-’的情况
-int flag1 = 0; //用来判断除数是0的情况
-//取出数字栈顶两个数字进行s运算函数，需要注意！因为我们需要对数字栈进行入
-//栈出栈操作，改变了数字栈的结构，所以我们需要在栈名前加“&”
-void calculate(stack<int>& q1, char s)
-{
-    int x, y, z;
-    switch (s) {
-    case '+': {
-        x = q1.top();
-        q1.pop();
-        y = q1.top();
-        q1.pop();
-        z = x + y;
-        q1.push(z);
-        break;
-    }
-    case '-': {
-        x = q1.top();
-        q1.pop();
-        y = q1.top();
-        q1.pop();
-        z = y - x;
-        q1.push(z);
-        break;
-    }
-    case '*': {
-        x = q1.top();
-        q1.pop();
-        y = q1.top();
-        q1.pop();
-        z = x * y;
-        q1.push(z);
-        break;
-    }
-    case '/': {
-        x = q1.top();
-        q1.pop();
-        y = q1.top();
-        q1.pop();
-        if (x == 0) {
-            flag1 = 1;
-            break;
-        }
-        z = y / x;
-        q1.push(z);
-        break;
-    }
-    }
+#include<vector>
+#include<cmath>
+struct node {
+	int data;
+	node* next;
+};
+class LinkList {
+public:
+	LinkList(vector<int>a, int n);
+	int size();
+	int get_element(const int& i);
+	bool insert(int i, int x);
+	bool delete_element(int i);
+	void display();
+	node* locate(LinkList L, int i);
+	bool judge(LinkList& L);
+	int count;
+	node* head;
+};
+LinkList::LinkList(vector<int>a, int n) {
+	head = new node;
+	head->next = head;
+	node * r;
+	r = head;
+	for (int i = 0; i < n; i++) {
+		node *p = new node;
+		p->data = a[i];
+		p->next = NULL;
+		r->next = p;
+		r = p;
+		r->next = head;
+	}
+	count = count + n;
 }
-//用数字来表示符号优先级
-int fuhao(char s)
-{
-    if (s == '+' || s == '-')
-        return 1;
-    if (s == '*' || s == '/')
-        return 2;
-    if (s == '(' || s == ')')
-        return 3;
-    if (s == '#')
-        return -1;
-}
-//对两个栈进行入栈出栈以及计算的函数
-void function(string a)
-{
-    q2.push('#'); //在符号栈先入一个“#”，防止后序找栈顶为空的时候发生异常
-    int len = a.size();
-    if (a[0] == '-') //如果第一个数字是负号的情况，要单独考虑
-    {
-        flag2 = 1;
-        a[0] = '0';
-    }
-    for (int i = 0; i < len; i++) //主循环
-    {
-        if (a[i] == '(') {
-            q2.push(a[i]);
-        } else if (a[i] == ')') {
-            while (q2.top() != '(') {
-                calculate(q1, q2.top());
-                q2.pop();
-            }
-            q2.pop();
+int LinkList::size() {
+	node* p = head;
+	int n = 0;
 
-        } else if (a[i] >= '0' && a[i] <= '9') {
-            int num = 0;
-            //数字不一定只有一位，如果是多位数字要进行处理
-            while (a[i] >= '0' && a[i] <= '9') {
-                num *= 10;
-                num += (a[i] - '0');
-                i++;
-            }
-            i--;
-            if (flag2 == 1 && flag == 0) //对第一位是负数的单独处理
-                num *= -1;
-            q1.push(num);
-            flag = 1;
-        } else {
-            if (a[i] == '+' || a[i] == '-') {
-                if ((fuhao(q2.top()) >= fuhao(a[i])) && q2.top() != '(') {
-                    while (fuhao(q2.top()) >= fuhao(a[i]) && q2.top() != '(') {
-                        calculate(q1, q2.top());
-                        q2.pop();
-                    }
-                    q2.push(a[i]);
-                } else {
-                    q2.push(a[i]);
-                }
-            } else if (a[i] == '*' || a[i] == '/') {
-                if (fuhao(q2.top()) == fuhao(a[i])) {
-                    calculate(q1, q2.top());
-                    if (flag1 == 1) {
-                        printf("error");
-                        return;
-                    }
-                    q2.pop();
-                    q2.push(a[i]);
-                } else {
-                    q2.push(a[i]);
-                }
-            }
-        }
-    }
-    //对栈中剩余数字进行处理，当字符栈空了自然运算就结束了
-    while (q2.top() != '#') {
-        calculate(q1, q2.top());
-        if (flag1 == 1) {
-            printf("error");
-            return;
-        }
-        q2.pop();
-    }
-    cout << q1.top();
+	while (p->next!=head) {
+		p = p->next;
+		n++;
+	}
+	return n;
 }
-int main() //主函数
-{
-    string a;
-    cin>>a;
-    function(a);
-    system("pause");
-    return 0;
+int LinkList::get_element(const int& i) {
+	node* p = head;
+	int j = 0;
+	while (j < i && p != NULL) {
+		p = p->next;
+		j++;
+	}
+	return p->data;
 }
+bool LinkList::insert(int i, int x) {
+	if (i < 1)return false;
+	node* p = head;
+	int j = 0;
+	while (p != NULL && j < i - 1) {
+		p = p->next;
+		j++;
+	}
+	if (p == NULL)return false;
+	node* s = new node;
+	s->data = x;
+	s->next = p->next;
+	p->next = s;
+	count++;
+	return true;
+}
+bool LinkList::delete_element(int i) {
+	if (i < 1)return false;
+	node* p = head;
+	int j = 0;
+	while (p != NULL && j < i - 1) {
+		p = p->next;
+		j++;
+	}
+	if (p == NULL) return false;
+	if (p->next == NULL)return false;
+	node* u = p->next;
+	p->next = u->next;
+	delete u;
+	count--;
+}
+void LinkList::display() {
+	node* p = head;
+	for (int i = 0; i < size(); i++) {
+		p = p->next;
+		//if (p->next!=head)
+			cout << p->data << "  ";
+		
+	}
+	cout << endl;
+}
+node* LinkList::locate(LinkList L, int i) {
+	int j = 0;
+	if (i > count) return NULL;
+	node* p = head;
+	while (p != NULL && j != i) {
+		p = p->next;
+		j++;
+	}
+	return p;
+}
+bool LinkList::judge(LinkList& L) {
+	node* p = head->next;
+	if (p == NULL) cout << "链表为空" << endl;
+	int j = 1;
+	while (p != head) {
+		if (fabs(p->data - j) <= 3) {
+			p = p->next;
+			j++;
+			if (p == head)
+				return true;
+		}
+		else
+			return false;
+	}
+}
+//<3>void public_(LinkList L1, LinkList L2, LinkList& L3) {
+//	node* p1 = L1.head->next; node* p2 = L2.head->next;
+//	while (p1 != L1.head && p2 != L2.head) {
+//		if (p1->data < p2->data)p1 = p1->next;
+//		else if (p1->data > p2->data)p2 = p2->next;
+//		else
+//		{
+//			L3.insert(L3.count + 1, p1->data);
+//			p1 = p1->next;
+//			p2 = p2->next;
+//		}
+//	}
+//	L3.display();
+//}
+//void bingji(LinkList L1, LinkList L2, LinkList& L3) {
+//	node* p1 = L1.head->next; node* p2 = L2.head->next;
+//	while (p1 != L1.head && p2 != L2.head) {
+//		if (p1->data > p2->data) {
+//			L3.insert(L3.count + 1, p2->data);
+//			p2 = p2->next;
+//		}
+//		else if (p1->data < p2->data) {
+//			L3.insert(L3.count + 1, p1->data);
+//			p1 = p1->next;
+//		}
+//		else if (p1->data ==p2->data) {
+//			L3.insert(L3.count + 1, p1->data);
+//			p1 = p1->next;
+//			p2 = p2->next;
+//		}
+//	}
+//		if (p1 == L1.head) {
+//			while (p2 != L2.head) {
+//				L3.insert(L3.count + 1, p2->data);
+//				p2 = p2->next;
+//			}
+//		}
+//		 else if (p2 == L2.head) {
+//			while (p1 != L1.head) {
+//				L3.insert(L3.count + 1, p1->data);
+//				p1 = p1->next;
+//			}
+//		 L3.display();
+//	}
+
+
+
+
+//<2>void test02() {
+//	vector<int>v = { 1,2,3,4,5,6,7,8,9,10,11,12,13,15,20,18 };
+//	LinkList L(v, 16);
+//	cout << L.judge(L);
+//}
+
+
+
+
+
+//<3>void test03() {
+//	vector<int>a = { 1,3,6,10,15,16,17,18,19,20 };
+//	vector<int>b = { 1,2,3,4,5,6,7,8,9,10,18,20 };
+//	vector<int>c = { 0 };
+//	LinkList L1(a, 10);
+//	LinkList L2(b, 12);
+//	LinkList L3(c, 0);
+//	//public_(L1, L2, L3);
+//	//bingji(L1, L2, L3);
+//}
+
+
+int main() {
+	//test02();
+	//test03();
+	return 0;
+} 

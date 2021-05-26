@@ -3,29 +3,28 @@
 using namespace std;
 
 template <typename T>
-struct node
-{
+struct node {
     T data;
-    node<T> *next;
+    node<T>* next;
 };
 
 template <typename T>
-class LinkedList
-{
+class LinkedList {
 public:
     LinkedList();
     LinkedList(vector<T> a, int n);
     int size();
-    T get_element(const int &i) const;
-    node<T> *locate(const T &x) const;
-    void insert(const int &i, const T &x);
-    void delete_element(const int &i);
+    T get_element(const int& i) const;
+    node<T>* locate(const T& x) const;
+    void insert(const int& i, const T& x);
+    void delete_element(const int& i);
     void PrintTest();
-    T operator[](const int &i);
+    T operator[](const int& i);
+    int locate_element(const T& e);
 
 private:
     int count;
-    node<T> *head;
+    node<T>* head;
 };
 
 template <typename T>
@@ -39,9 +38,8 @@ template <typename T>
 LinkedList<T>::LinkedList(vector<T> a, int n)
 {
     head = new node<T>;
-    node<T> *p = head;
-    for (int i = 0; i < n; i++)
-    {
+    node<T>* p = head;
+    for (int i = 0; i < n; i++) {
         p->next = new node<T>;
         p = p->next;
         p->data = a[i];
@@ -55,23 +53,22 @@ int LinkedList<T>::size()
 {
     if (count == 0)
         return 0;
-    node<T> *p = head->next;
+    node<T>* p = head->next;
     int n = 0;
-    while (p != NULL)
-    {
+    while (p != NULL) {
         n++;
         p = p->next;
     }
     return n;
+    
 }
 
 template <typename T>
-T LinkedList<T>::get_element(const int &i) const
+T LinkedList<T>::get_element(const int& i) const
 {
-    node<T> *p = head->next;
+    node<T>* p = head->next;
     int j = 0;
-    while (j != i && p != NULL)
-    {
+    while (j != i && p != NULL) {
         p = p->next;
         j++;
     }
@@ -81,9 +78,9 @@ T LinkedList<T>::get_element(const int &i) const
 }
 
 template <typename T>
-node<T> *LinkedList<T>::locate(const T &x) const
+node<T>* LinkedList<T>::locate(const T& x) const
 {
-    node<T> *p = head->next;
+    node<T>* p = head->next;
     while (p != NULL)
         if (p->data == x)
             return p;
@@ -93,22 +90,21 @@ node<T> *LinkedList<T>::locate(const T &x) const
 }
 
 template <typename T>
-void LinkedList<T>::insert(const int &i, const T &x)
+void LinkedList<T>::insert(const int& i, const T& x)
 {
-    if(i>size()){
-        cout<<"ÉÏÒç£¡²åÈëÊ§°Ü£¡"<<endl;
+    if (i > size()) {
+        cout << "ÉÏÒç£¡²åÈëÊ§°Ü£¡" << endl;
         return;
     }
-    node<T> *p = head;
+    node<T>* p = head;
     int j = 0;
-    while (j != i && p != NULL)
-    {
+    while (j != i && p != NULL) {
         p = p->next;
         ++j;
     }
     if (p == NULL)
         return;
-    node<T> *s = new node<T>;
+    node<T>* s = new node<T>;
     s->data = x;
     s->next = p->next;
     p->next = s;
@@ -116,22 +112,21 @@ void LinkedList<T>::insert(const int &i, const T &x)
 }
 
 template <typename T>
-void LinkedList<T>::delete_element(const int &i)
+void LinkedList<T>::delete_element(const int& i)
 {
-    if(i<0||i>=size()){
-        cout<<"ÏÂÒç£¡É¾³ýÊ§°Ü£¡"<<endl;
+    if (i < 0 || i >= size()) {
+        cout << "ÏÂÒç£¡É¾³ýÊ§°Ü£¡" << endl;
         return;
     }
-    node<T> *p = head;
+    node<T>* p = head;
     int j = 0;
-    while (j != i && p != NULL)
-    {
+    while (j != i && p != NULL) {
         p = p->next;
         ++j;
     }
     if (i < 0 || i > count)
         return;
-    node<T> *u = p->next;
+    node<T>* u = p->next;
     p->next = u->next;
     delete u;
     count--;
@@ -140,20 +135,39 @@ void LinkedList<T>::delete_element(const int &i)
 template <typename T>
 void LinkedList<T>::PrintTest()
 {
-    node<T> *p = head->next;
-    for (int i = 0; i < size(); ++i)
-    {
+    node<T>* p = head->next;
+    for (int i = 0; i < size(); ++i) {
         cout << p->data << ' ';
         p = p->next;
     }
+    cout << endl;
 }
 template <typename T>
-T LinkedList<T>::operator[](const int &i)
+T LinkedList<T>::operator[](const int& i)
 {
     if (i < 0 || i >= size())
         return INT_MIN;
-    node<T> *p = head->next;
+    node<T>* p = head->next;
     for (int j = 0; j < i; ++j)
         p = p->next;
     return p->data;
+}
+
+template <typename T>
+int LinkedList<T>::locate_element(const T& e)
+{
+    node<T>* p = head->next;
+    int n = 0;
+    if (p->data > e)
+        return n;
+    for (int i = 0; i < size(); ++i) {
+        if(p->next==NULL)
+        return size();
+        if (p->data < e && p->next->data > e) {
+            n = i;
+            return n+1;
+        } else if (p->data < e && p->next->data < e)
+            p = p->next;
+    }
+    return n+1;
 }
