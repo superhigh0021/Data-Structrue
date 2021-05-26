@@ -133,13 +133,19 @@ void test33()
     LinkedList2<int> l4(v4, v4.size());
 }
 
+void test4(){
+    vector<int>v1={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    vector<int>v2={10, 30, 40, 55, 60, 70, 88, 99, 100};
+    
+}
+
 int main(void)
 {
     //test1();
     //cout << test21() << ' ' << test22();
     //test31();
     //test32();
-    test33();
+    //test33();
 
     system("pause");
     return 0;
