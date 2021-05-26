@@ -4,47 +4,47 @@
 using namespace std;
 
 template <typename K, typename V>
-struct Entry
-{
+struct Entry {
     K key;
     V value;
     Entry(K k = K(), V v = V())
-        : key(k), value(v){};
-    Entry(Entry<K, V> const &e)
-        : key(e.key), value(e.value){};
-    bool operator<(Entry<K, V> const &e) { return key < e.key; }
-    bool operator>(Entry<K, V> const &e) { return key > e.key; }
-    bool operator==(Entry<K, V> const &e) { return key == e.key; }
-    bool operator!=(Entry<K, V> const &e) { return key != e.key; }
+        : key(k)
+        , value(v) {};
+    Entry(Entry<K, V> const& e)
+        : key(e.key)
+        , value(e.value) {};
+    bool operator<(Entry<K, V> const& e) { return key < e.key; }
+    bool operator>(Entry<K, V> const& e) { return key > e.key; }
+    bool operator==(Entry<K, V> const& e) { return key == e.key; }
+    bool operator!=(Entry<K, V> const& e) { return key != e.key; }
 };
 
 template <typename K, typename V>
-class Hashtable : public Dictionary<K, V>
-{
+class Hashtable : public Dictionary<K, V> {
 private:
-    Entry<K, V> **ht;    //桶数组，存放词条数组
-    int M;               //桶数组容量
-    int N;               //词条数量
-    Bitmap *lazyRemoval; //懒惰删除标记
+    Entry<K, V>** ht; //桶数组，存放词条数组
+    int M; //桶数组容量
+    int N; //词条数量
+    Bitmap* lazyRemoval; //懒惰删除标记
 #define lazilyRemoved(x) (lazyRemoval->test(x))
 #define markAsRemoved(x) (lazyRemoval->set(x))
 
 protected:
-    int probe4Hit(const K &k);  //沿关键码k对应的试探链，找到词条匹配的桶
-    int probe4Free(const K &k); //沿关键码k对应的试探链，找到首个可用空桶
-    void rehash();              //重散列算法：扩充桶数组，保证装填因子在警戒线以下
+    int probe4Hit(const K& k); //沿关键码k对应的试探链，找到词条匹配的桶
+    int probe4Free(const K& k); //沿关键码k对应的试探链，找到首个可用空桶
+    void rehash(); //重散列算法：扩充桶数组，保证装填因子在警戒线以下
 
 public:
     Hashtable(int c = 5); //创建一个容量不小于c的散列表
     ~Hashtable();
     int size() const { return N; }
     bool put(K, V);
-    V *get(K k);
+    V* get(K k);
     bool remove(K k);
 };
 
 //根据file文件中的记录，在[c,n)内取最小的素数
-int primeNLT(int c, int n, char *file)
+int primeNLT(int c, int n, char* file)
 {
     Bitmap B(file, n);
     while (c < n)
@@ -75,8 +75,7 @@ static size_t hashCode(long long i)
 static size_t hashCode(char s[])
 {
     int h = 0;
-    for (size_t n = strlen(s), i = 0; i < n; ++i)
-    {
+    for (size_t n = strlen(s), i = 0; i < n; ++i) {
         h = (h << 5) | ((h >> 27));
         h += (int)s[i];
     }
@@ -89,8 +88,8 @@ Hashtable<K, V>::Hashtable(int c)
     M = primeNLT(c, 1048576, "E:/Data-Structrue/Data Structrue/Dictionary/prime-1048576-bitmap.txt");
     N = 0;
     //开辟桶数组
-    ht = new Entry<K, V> *[M];
-    memset(ht, 0, sizeof(Entry<K, V> *) * M);
+    ht = new Entry<K, V>*[M];
+    memset(ht, 0, sizeof(Entry<K, V>*) * M);
     lazyRemoval = new Bitmap(M);
 }
 
@@ -106,7 +105,7 @@ Hashtable<K, V>::~Hashtable()
 
 //词条的查找算法
 template <typename K, typename V>
-V *Hashtable<K, V>::get(K k)
+V* Hashtable<K, V>::get(K k)
 {
     int r = probe4Hit(k);
     //禁止词条的key值雷同
@@ -115,7 +114,7 @@ V *Hashtable<K, V>::get(K k)
 
 //沿关键码k对应的查找链，找到与之匹配的桶
 template <typename K, typename V>
-int Hashtable<K, V>::probe4Hit(const K &k)
+int Hashtable<K, V>::probe4Hit(const K& k)
 {
     int r = k % M; //从起始桶触发
     while ((ht[r] && (k != ht[r]->key)) || (!ht[r] && lazilyRemoved(r)))
@@ -137,7 +136,7 @@ bool Hashtable<K, V>::remove(K k)
 }
 
 template <typename K, typename V>
-int Hashtable<K, V>::probe4Free(const K &k)
+int Hashtable<K, V>::probe4Free(const K& k)
 {
     int r = hashCode(k) % M;
     while (ht[r])
@@ -149,17 +148,31 @@ template <typename K, typename V>
 void Hashtable<K, V>::rehash()
 {
     int old_capacity = M;
-    Entry<K, V> **old_ht = ht;
+    Entry<K, V>** old_ht = ht;
     M = primeNLT(2 * M, 1048576, "E:/Data-Structrue/Data Structrue/Dictionary/prime-1048576-bitmap.txt")
-        N = 0;
-    ht = new Entry<K, V> *[M];
-    memset(ht, 0, sizeof(Entry<K, V> *) * M);
+        N
+        = 0;
+    ht = new Entry<K, V>*[M];
+    memset(ht, 0, sizeof(Entry<K, V>*) * M);
     release(lazyRemoval);
     lazyRemoval = new Bitmap(M);
-    for (int i = 0; i < old_capacity; ++i)
-    {
+    for (int i = 0; i < old_capacity; ++i) {
         if (old_ht[i])
             put(old_ht[i]->key, old_ht[i]->value);
     }
     release(old_ht);
 }
+
+static size_t hashCode(char c) { return (size_t)c; } //字符
+static size_t hashCode(int k) { return (size_t)k; } //整数以及长长整数
+static size_t hashCode(long long i) { return (size_t)((i >> 32) + (int)i); }
+static size_t hashCode(char s[])
+{ //生成字符串的循环移位散列码（cyclic shift hash code）
+    unsigned int h = 0; //散列码
+    for (size_t n = strlen(s), i = 0; i < n; i++) //自左向右，逐个处理每一字符
+    {
+        h = (h << 5) | (h >> 27);
+        h += (int)s[i];
+    } //散列码循环左移5位，再累加当前字符
+    return (size_t)h; //如此所得的散列码，实际上可理解为近似的“多项式散列码”
+} //对于英语单词，"循环左移5位"是实验统计得出的最佳值
