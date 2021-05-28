@@ -7,27 +7,39 @@
 3) 采用一定的方法解决冲突； 
 4) 查找并显示给定电话号码的记录； 
 5) （选作）设计不同的散列函数，比较冲突率； 
-6) （选作）在散列函数确定的前提下，尝试各种不同类型处理冲突的方法， 
-考察平均查找长度的变化。 */
+6) （选作）在散列函数确定的前提下，尝试各种不同类型处理冲突的方法,考察平均查找长度的变化。 */
 
-#include "hashtable.h"
 #include <iostream>
-#include<string>
+#include <string>
+#include "TelephoneNumber.h"
 using namespace std;
 
-void test01(){
-    Hashtable<string,long long>h;
-    string a;
-    long long b;
-    do{
-        cin>>b>>a;
-        h.put(a,b);
-    }while(getchar()!='#');
-    cout<<*(h.get("wangwu"));
-}
 
-int main(void){
-    test01();
+int main(void)
+{
+    TelephoneNumber tn;
+    int choice = 0;
+    while (true)
+    {
+        tn.showmenu();
+        cout << "请输入你的选择：";
+        cin >> choice;
+        switch (choice)
+        {
+        case 0:
+            tn.exitsystem();
+            break;
+        case 1:
+            tn.push();
+            break;
+        case 2:
+            tn.find();
+            break;
+        default:
+            cout<<"输入格式有误！"<<endl;
+            continue;
+        }
+    }
 
     system("pause");
     return 0;
