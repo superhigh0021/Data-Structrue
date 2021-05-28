@@ -1,5 +1,7 @@
 #include "Bitmap.h"
-#include "dictionary.h"
+#include "Dictionary.h"
+#include "release.h"
+#include <cstring>
 #include <iostream>
 using namespace std;
 
@@ -36,7 +38,7 @@ protected:
 
 public:
     Hashtable(int c = 5); //创建一个容量不小于c的散列表
-    ~Hashtable();
+    // ~Hashtable();
     int size() const { return N; }
     bool put(K, V);
     V* get(K k);
@@ -46,6 +48,7 @@ public:
 //根据file文件中的记录，在[c,n)内取最小的素数
 int primeNLT(int c, int n, char* file)
 {
+    Eratosthenes(n, file);
     Bitmap B(file, n);
     while (c < n)
         if (B.test(c))
@@ -93,15 +96,15 @@ Hashtable<K, V>::Hashtable(int c)
     lazyRemoval = new Bitmap(M);
 }
 
-template <typename K, typename V>
-Hashtable<K, V>::~Hashtable()
-{
-    for (int i = 0; i < M; i++)
-        if (ht[i])
-            release(ht[i]);
-    release(ht);
-    release(lazyRemoval);
-}
+// template <typename K, typename V>
+// Hashtable<K, V>::~Hashtable()
+// {
+//     for (int i = 0; i < M; i++)
+//         if (ht[i])
+//             release(ht[i]);
+//     release(ht);
+//     release(lazyRemoval);
+// }
 
 //词条的查找算法
 template <typename K, typename V>
@@ -145,13 +148,25 @@ int Hashtable<K, V>::probe4Free(const K& k)
 }
 
 template <typename K, typename V>
+bool Hashtable<K, V>::put(K k, V v)
+{
+    if (ht[probe4Hit(k)])
+        return false;
+    int r = probe4Free(k);
+    ht[r] = new Entry<K, V>(k, v);
+    ++N;
+    if (N * 2 > M)
+        rehash();
+    return true;
+}
+
+template <typename K, typename V>
 void Hashtable<K, V>::rehash()
 {
     int old_capacity = M;
     Entry<K, V>** old_ht = ht;
-    M = primeNLT(2 * M, 1048576, "E:/Data-Structrue/Data Structrue/Dictionary/prime-1048576-bitmap.txt")
-        N
-        = 0;
+    M = primeNLT(2 * M, 1048576, "E:/Data-Structrue/Data Structrue/Dictionary/prime-1048576-bitmap.txt");
+    N = 0;
     ht = new Entry<K, V>*[M];
     memset(ht, 0, sizeof(Entry<K, V>*) * M);
     release(lazyRemoval);
@@ -162,17 +177,3 @@ void Hashtable<K, V>::rehash()
     }
     release(old_ht);
 }
-
-static size_t hashCode(char c) { return (size_t)c; } //字符
-static size_t hashCode(int k) { return (size_t)k; } //整数以及长长整数
-static size_t hashCode(long long i) { return (size_t)((i >> 32) + (int)i); }
-static size_t hashCode(char s[])
-{ //生成字符串的循环移位散列码（cyclic shift hash code）
-    unsigned int h = 0; //散列码
-    for (size_t n = strlen(s), i = 0; i < n; i++) //自左向右，逐个处理每一字符
-    {
-        h = (h << 5) | (h >> 27);
-        h += (int)s[i];
-    } //散列码循环左移5位，再累加当前字符
-    return (size_t)h; //如此所得的散列码，实际上可理解为近似的“多项式散列码”
-} //对于英语单词，"循环左移5位"是实验统计得出的最佳值
