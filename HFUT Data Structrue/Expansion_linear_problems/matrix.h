@@ -1,12 +1,11 @@
 #define maxnum 10
 using namespace std;
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
-struct Tuple
-{
-    int i, j;  //元素的行列下标
+struct Tuple {
+    int i, j; //元素的行列下标
     int value; //元素的值
 };
 
@@ -26,13 +25,11 @@ vector<spmatrix> reset()
     cout << "你要创建矩阵的行数列数分别为多少？" << endl;
     int mu, nu;
     cin >> mu >> nu;
-    for (int i = 0; i < num; ++i)
-    {
+    for (int i = 0; i < num; ++i) {
         s[i].mu = mu;
         s[i].nu = nu;
     }
-    for (int i = 0; i < num; ++i)
-    {
+    for (int i = 0; i < num; ++i) {
         cout << "第" << i + 1 << "个矩阵的非零元素个数：";
         int num_of_nzero;
         cin >> num_of_nzero;
@@ -41,14 +38,12 @@ vector<spmatrix> reset()
     return s;
 }
 
-void insert(vector<spmatrix> &s, vector<vector<vector<int>>> &v)
+void insert(vector<spmatrix>& s)
 {
     int num = s.size();
-    for (int m = 0; m < num; ++m)
-    {
+    for (int m = 0; m < num; ++m) {
         int num_of_nzero = s[m].tu;
-        for (int n = 0; n < num_of_nzero; ++n)
-        {
+        for (int n = 0; n < num_of_nzero; ++n) {
             int i, j, value;
             cout << "你创建的第" << m + 1 << "个矩阵非零元素的行列和元素值分别为：";
             cin >> i >> j >> value;
@@ -57,14 +52,38 @@ void insert(vector<spmatrix> &s, vector<vector<vector<int>>> &v)
             s[m].data[n].value = value;
         }
     }
-    for (int i = 0; i < v.size(); ++i)
-    {
-        //第i个稀疏矩阵
-        for (int j = 0; j < s[i].tu; ++j)
-        {
-            //第j个非零元素 行标、列标、元素值
-            int I = s[i].data[j].i, J = s[i].data[j].j, V = s[i].data[j].value;
-            v[i][I-1][J-1] = V;//保存的行标、列标是习惯上的从1开始
+    // for (int i = 0; i < v.size(); ++i) {
+    //     //第i个稀疏矩阵
+    //     for (int j = 0; j < s[i].tu; ++j) {
+    //         //第j个非零元素 行标、列标、元素值
+    //         int I = s[i].data[j].i, J = s[i].data[j].j, V = s[i].data[j].value;
+    //         v[i][I - 1][J - 1] = V; //保存的行标、列标是习惯上的从1开始
+    //     }
+    // }
+}
+
+void plus_spmatrix(const vector<spmatrix>& s, vector<vector<int>>& v)
+{
+    int n = s.size();
+    //尚未考虑非零元素为0的情况
+    for (int j = 0; j < s[0].tu; ++j) {
+        //第j个非零元素 行标、列标、元素值
+        int I = s[0].data[j].i, J = s[0].data[j].j, V = s[0].data[j].value;
+        v[I - 1][J - 1] = V; //保存的行标、列标是习惯上的从1开始
+    }
+    cout<<1<<endl;
+    for (int i = 0; i < v.size(); ++i) {
+        int count = 0;
+        for (auto c : v[i]) {
+            cout << c;
+            count++;
+            if (count == v[0].size()) {
+                cout << endl;
+                count = 0;
+            }
         }
     }
+    // while(n!=0){
+
+    // }
 }
