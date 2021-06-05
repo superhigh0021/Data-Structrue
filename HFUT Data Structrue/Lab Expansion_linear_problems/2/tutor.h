@@ -29,28 +29,9 @@ tutor::tutor()
 
 void tutor::insert()
 {
-    cout << "**********************" << endl;
-    cout << "***** 1、插入导师  *****" << endl;
-    cout << "***** 2、插入研究生*****" << endl;
-    cout << "***** 3、插入本科生*****" << endl;
-    cout << "**********************" << endl;
-    char c;
-    cin >> c;
-    switch (c)
-    {
-    case '1':
-        insert_tutor();
-        break;
-    case '2':
-        insert_graduate();
-        break;
-    case '3':
-        insert_undergraduate();
-        break;
-    default:
-        cout << "输入有误！" << endl;
-        break;
-    }
+
+    //此处修改为只在先插入导师的情况下再插入研究生和本科生，不然的话会导致紊乱
+    insert_tutor();
 }
 
 void tutor::insert_tutor()
@@ -77,6 +58,7 @@ void tutor::insert_tutor()
     GLNode *k;
     if (w == 1)
     {
+        //该导师负责研究生，导师对应的num要自增
         GLNode *s = Lhead2;
         int flag2 = size2;
         insert_graduate();
@@ -84,7 +66,7 @@ void tutor::insert_tutor()
         {
             s = s->next;
             --flag2;
-        }
+        }//该操作将指针指向下一个研究生开始
         k = s;
     }
 
@@ -108,6 +90,14 @@ void tutor::insert_tutor()
 
     if (w == 1 && q != 0)
     {
+        //该导师负责研究生且负责本科生
+        p->num++;//导师的下一层num++
+        //研究生的下一层也要增加！待实现
+        
+
+
+
+
         p->nextlevel = k;
         k->up = p;
         k->nextlevel=t;
@@ -120,11 +110,19 @@ void tutor::insert_tutor()
     }
     else if (w == 1 && q == 0)
     {
+        //该导师负责研究生但是不负责本科生
+        p->num++;
         p->nextlevel = k;
         k->up = p;
     }
     else if (w == 2 && q != 0)
     {
+        //该导师不负责研究生，但是负责本科生
+
+
+
+
+
         p->nextlevel = t;
         while (q > 0)
         {
@@ -133,7 +131,7 @@ void tutor::insert_tutor()
             --q;
         }
     } 
-    cout<<Lhead3->next->up->name;
+    //cout<<Lhead3->next->up->name;  //测试用，随时注释
 }
 
 void tutor::insert_graduate()

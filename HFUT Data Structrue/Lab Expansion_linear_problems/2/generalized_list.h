@@ -8,7 +8,7 @@ struct GLNode
 {
     //为0时该节点没有下一层，为1时有下一层
     bool tag;
-    int num;//下一层的数量
+    int num;//下一层的数量,在插入和删除时更新数据
     string name;       //姓名
     GLNode *up;        //上一层
     GLNode *nextlevel; //下一层
