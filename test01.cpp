@@ -2,18 +2,17 @@
 using namespace std;
 #include <stack>
 
-stack<int> *ht(int s)
-{
-	stack<int> *S;
-	S->empty();
-	return S;
-}
-
 int main(void)
 {
-	int s = 0;
-	ht(s);
+    double r=0, f=1;
+    int i;
+    for(i = 1; i <= 100; i ++)
+    {
+        f*=i;//i!
+        r+=f;
+    }
+    cout<<r;
 
-	system("pause");
-	return 0;
+    system("pause");
+    return 0;
 }
