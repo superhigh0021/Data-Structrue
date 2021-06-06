@@ -4,15 +4,31 @@ using namespace std;
 int main(void)
 {
     tutor t;
-    t.insert_tutor();
-    t.search();
+    while (true) {
+        t.showmenu();
+        int choice;
+        cin >> choice;
+        switch (choice) {
+        case 0:
+            exit(0);
+            break;
+        case 1:
+            t.insert_tutor();
+            system("cls");
+            break;
+        case 2:
+            t.delete_member();
+            system("cls");
+            break;
+        case 3:
+            t.search();
+            system("cls");
+            break;
+        default:
+            break;
+        }
+    }
 
-
-//研究生的写的没问题，主要是导师和本科生的代码，up和nextlevel不明确，不方便表达
-
-    // cout<<t.Lhead1->next->next->name<<endl;
-    // cout<<t.Lhead1->next->next->nextlevel->name<<endl;
-    // cout<<t.Lhead1->next->next->nextlevel->nextlevel->name<<endl;
     system("pause");
     return 0;
 }
