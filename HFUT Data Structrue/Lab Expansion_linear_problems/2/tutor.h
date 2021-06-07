@@ -180,6 +180,7 @@ void tutor::Search(GLNode* head, const string& name)
                     p = p->next;
                     cout << p->name << ' ';
                 }
+                cout<<endl;
             } else if (head == Lhead2) {
                 //研究生
                 cout << "该人为研究生" << endl
@@ -193,6 +194,7 @@ void tutor::Search(GLNode* head, const string& name)
                         p = p->next;
                         cout << p->name << ' ';
                     }
+                    cout<<endl;
                 } else
                     cout << "他的导师不带本科生" << endl;
             } else if (head == Lhead3) {
