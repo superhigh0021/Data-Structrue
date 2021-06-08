@@ -81,5 +81,5 @@ public:
     stack<Tv> *tSort(int);                  //基于DFS的拓扑排序算法
     void prim(int);                         //最小支撑树Prim算法
     void dijkstra(int);                     //最短路径Dijkstra算法
-    temlate<typename PU> void pfs(int, PU); //优先级搜索框架
+    template<typename PU> void pfs(int, PU); //优先级搜索框架
 };
