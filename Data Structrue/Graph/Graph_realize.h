@@ -285,7 +285,7 @@ template <typename Tv, typename Te>
 template <typename PU>
 void Graph<Tv, Te>::pfs(int s, PU prioUpdater)
 {
-    reset();//priority 全部被初始化为INT_MAX
+    reset(); //priority 全部被初始化为INT_MAX
     int v = s; //从s开始
     do {
         if (status(v) == UNDISCOVERED)
@@ -294,27 +294,31 @@ void Graph<Tv, Te>::pfs(int s, PU prioUpdater)
     } while (s != (v = (++v % n)));
 }
 
+
+
 template <typename Tv, typename Te>
 template <typename PU>
-//顶点、边、优先级更新
+//优先级搜索(单个连通域)
 void Graph<Tv, Te>::PFS(int s, PU prioUpdater)
 {
-    //优先级搜索(单个连通域)
+    //顶点、边、优先级更新
     priority(s) = 0;
     status(s) = VISITED;
     parent(s) = -1;
     while (true) {
         //将下一顶点和边添加到PFS树中
         for (int w = firstNbr(s); w > -1; w = nextNbr(s, w))
-            prioUpdater(this, s, w); //优先级策略更新函数
+            //优先级策略更新函数，只更新s邻接顶点的优先级，然后结合全部顶点进行判断
+            prioUpdater(this, s, w); 
         for (int shortest = INT_MAX, w = 0; w < n; w++)
             //优先级数越大，优先级越低
             if (status(w) == UNDISCOVERED)
                 if (shortest > priority(w)) {
-                    //从尚未加入遍历树的顶点中选出下一个优先级最高的顶点s
+                    //从剩下的顶点中通过for一次次迭代找到最应该(优先级最高)的顶点
                     shortest = priority(w);
                     s = w;
                 }
+        //终止条件
         if (status(s) == VISITED)
             break; //直到所有顶点均已加入,break的是while
         status(s) = VISITED;
@@ -327,15 +331,30 @@ void Graph<Tv, Te>::PFS(int s, PU prioUpdater)
 template <typename Tv, typename Te>
 struct PrimPU {
     //针对Prim算法的顶点优先级更新器
-    virtual void operator()(Graph<Tv, Te>* g, int s, int v)
+    virtual void operator()(Graph<Tv, Te>* g, int uk, int v)
     {
         if (g->status(v) == UNDISCOVERED) //对于s每一个尚未被发现的邻接顶点v
-            if (g->priority(v) > g->weight(s, v)) {
+            if (g->priority(v) > g->weight(uk, v)) {
                 //按Prim策略做松弛
 
                 //牢记此处定义的优先级数越高，优先级越低,因为优先级数太高说明权重高，碰了就不是最小支撑树
-                g->priority(v) = g->weight(s, v); //更新优先级数
-                g->parent(v) = s; //更新父节点
+                g->priority(v) = g->weight(uk, v); //更新优先级数
+                g->parent(v) = uk; //更新父节点
+            }
+    }
+};
+
+
+//最短路径算法
+template <typename Tv, typename Te>
+struct DijkstraPu {
+    virtual void operator()(Graph<Tv, Te>* g, int uk, int v)
+    {
+        if (g->status(v) == UNDISCOVERED)
+            //对于uk每一尚未发现的邻接顶点v
+            if (g->priority(v) > g->priority(uk) + g->weight(uk, v)) {
+                g->priority(v) = g->priority(uk) + g->weight(uk, v);
+                g->parent(v) = uk;
             }
     }
 };
