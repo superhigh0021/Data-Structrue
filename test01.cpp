@@ -8,6 +8,7 @@ void _print(){
 
 int main(void){
     _print();
+    cout<<"hello"<<endl;
 
     system("pause");
     return 0;
