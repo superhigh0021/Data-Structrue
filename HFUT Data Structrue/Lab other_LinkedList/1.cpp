@@ -141,11 +141,12 @@ void test4(){
 
 int main(void)
 {
-    //test1();
-    //cout << test21() << ' ' << test22();
-    //test31();
-    //test32();
-    //test33();
+    test1();
+    cout<<endl<<endl;
+    cout << test21() << ' ' << test22()<<endl<<endl;
+    test31();
+    test32();
+    test33();
 
     system("pause");
     return 0;

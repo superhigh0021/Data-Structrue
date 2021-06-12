@@ -1,15 +1,13 @@
-#include <iostream>
+#include "data.h"
+
 using namespace std;
 
-void _print(){
-    int i;
-    cout<<i<<endl;
-}
-
-int main(void){
-    _print();
+int main(void)
+{
+    string s1="hello,",s2="world\n";
+    string s3='1'+s2;
+    cout<<s3;
 
     system("pause");
     return 0;
-    
 }

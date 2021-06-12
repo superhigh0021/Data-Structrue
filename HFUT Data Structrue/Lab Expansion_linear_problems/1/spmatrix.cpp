@@ -10,7 +10,8 @@ int main(void)
     vector<spmatrix> s = reset();
     insert(s);
 
-    //plus_spmatrix(s);
+    plus_spmatrix(s);
+    cout<<endl;
     multiply_spmatrix(s);
 
     system("pause");

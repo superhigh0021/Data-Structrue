@@ -14,7 +14,9 @@ int count_update(LinkedList1<T> l)
 
 void Joseph()
 {
-    vector<int> v(41, 1);
+    int n;
+    cin>>n;
+    vector<int> v(n, 1);
     LinkedList1<int> l(v, v.size());
     node1<int> *p = l.head->next->next;
     for (; count_update(l) > 2;)
