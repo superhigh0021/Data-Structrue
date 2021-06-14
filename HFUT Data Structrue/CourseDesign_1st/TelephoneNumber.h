@@ -52,10 +52,11 @@ void TelephoneNumber::exitsystem()
 
 void push_in_file(const string& id, long long number)
 {
-    fstream txtfile("E:/Data-Structrue/HFUT Data Structrue/CourseDesign_1st`/telephone_number.txt",ios::app);
-    char deletechar;
-    txtfile >> deletechar;
-    txtfile << '#' << number << ' ' << id << endl<<'%';
+    fstream txtfile("E:/Data-Structrue/HFUT Data Structrue/CourseDesign_1st/telephone_number.txt");
+    txtfile.seekp(-1, ios::end);
+    txtfile << '#' << number << ' ' << id << endl
+            << '%';
+
     txtfile.close();
 }
 
@@ -67,10 +68,17 @@ void TelephoneNumber::push()
     do {
         cin >> number >> id;
         h.put(id, number);
-    } while (getchar() != '#');
+        push_in_file(id, number);
+        char c = getchar();
+        if (c == '\n') {
+            char b=getchar();
+            if (b == '#')
+                break;
+            else ungetc(b,stdin); 
+        }
+    } while (true);
     cin.clear();
     cout << "²åÈë³É¹¦£¡" << endl;
-    push_in_file(id,number);
     system("pause");
     system("cls");
 }

@@ -7,7 +7,9 @@ using namespace std;
 #define AvlBalanced(x) ((-2 < BalFac(x)) && (BalFac(x) < 2))
 
 #define tallerChild(x) ( \
-    stature((x)->lc) > stature((x)->rc) ? (x)->lc : (stature((x)->lc) < stature((x)->rc) ? (x)->rc : (IsLChild(*(x)) ? (x)->lc : (x)->rc)))
+    stature((x)->lc) > stature((x)->rc) ? \
+    (x)->lc : (stature((x)->lc) < stature((x)->rc) ?\
+     (x)->rc : (IsLChild(*(x)) ? (x)->lc : (x)->rc)))
 
 template <typename T>
 class AVL : public BST<T> {
