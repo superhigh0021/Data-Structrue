@@ -1,5 +1,6 @@
 #include "Merge_Sort.h"
 #include"Quick_Sort.h"
+#include"Heap_Sort.h"
 using namespace std;
 
 void Merge_test(){
@@ -18,10 +19,19 @@ void Quick_test(){
     cout << endl;
 }
 
+void heap_test(){
+    vector<int> v = { 13,20 };
+    heap_sort(v);
+    for (auto i : v)
+        cout << i << ' ';
+    cout << endl;
+} 
+
 int main(void)
 {
     //Merge_test();
-    Quick_test();
+    //Quick_test();
+    heap_test();
 
     system("pause");
     return 0;
