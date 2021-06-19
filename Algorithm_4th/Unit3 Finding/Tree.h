@@ -1,8 +1,9 @@
+#define Node node<K, V>*
+#define templateKV template <typename K, typename V>
+
 #include <iostream>
 using namespace std;
 
-#define Node node<K, V>*
-#define templateKV template <typename K, typename V>
 
 templateKV class node {
 public:
