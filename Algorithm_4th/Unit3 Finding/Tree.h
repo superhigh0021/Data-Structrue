@@ -1,105 +1,131 @@
 #include <iostream>
 using namespace std;
 
-template <typename K, typename V>
-class node
-{
+#define Node node<K, V>*
+#define templateKV template <typename K, typename V>
+
+templateKV class node {
 public:
     node(K key, V value)
-        : key(key), value(value), N(1) {}
+        : key(key)
+        , value(value)
+        , size(1)
+    {
+    }
+    Node left = nullptr;
+    Node right = nullptr;
+    int size;
     K key;
     V value;
-    int N;
-    node *left = nullptr;
-    node *right = nullptr;
 };
 
-template <typename K, typename V>
-class Binary_Tree
-{
+templateKV class BST {
+public:
+    V get(K key);
+    void Delete(K key);
+    void put(K key, V value);
+
 private:
-    int size(node<K, V> *p)
+    Node root = nullptr;
+    int size(Node p)
     {
         if (p == nullptr)
             return 0;
-        else
-            return p->N;
+        return p->size;
     }
-    V get(node<K, V> *p, K key);
-    node<K, V> *put(node<K, V> *p, K key, V value);
-    void Delete(K key)
-    {
-        root = Delete(root, key);
-    }
-
-public:
-    node<K, V> *root = nullptr;
-    int size() { return size(root); }
-    V get(K key);
-    node<K, V> *put(K key, V value);
-    node<K, V> *Delete(node<K, V> *p, K key);
+    V get_from(Node p, K key);
+    Node put_from(Node p, K key, V value);
+    Node Delete_from(Node p, K key);
+    Node delMin(Node p);
+    Node min(Node p);
 };
 
-template <typename K, typename V>
-V Binary_Tree<K, V>::get(K key)
+templateKV
+    V
+    BST<K, V>::get(K key)
 {
-    return get(root, key);
+    return get_from(root, key);
 }
 
-template <typename K, typename V>
-V Binary_Tree<K, V>::get(node<K, V> *p, K key)
+templateKV
+    V
+    BST<K, V>::get_from(Node p, K key)
 {
     if (p == nullptr)
-    {
-        cout << "²éÕÒÊ§°Ü!";
-        exit(0);
-    }
-    if (p->key > key)
-        return get(p->left, key);
-    else if (p->key < key)
-        return get(p->right, key);
+        return -10000;
+    if (key < p->key)
+        return get_from(p->left, key);
+    else if (key > p->key)
+        return get_from(p->right, key);
     else
         return p->value;
 }
 
-template <typename K, typename V>
-node<K, V> *Binary_Tree<K, V>::put(K key, V value)
+templateKV void
+BST<K, V>::put(K key, V value)
 {
-    root = put(root, key, value);
+    root = put_from(root, key, value);
 }
 
-template <typename K, typename V>
-node<K, V> *Binary_Tree<K, V>::put(node<K, V> *p, K key, V value)
+templateKV
+    Node
+    BST<K, V>::put_from(Node p, K key, V value)
 {
     if (p == nullptr)
         return new node<K, V>(key, value);
-    if (p->key > key)
-        p->left = put(p->left, key, value);
-    else if (p->key < key)
-    {
-        p->right = put(p->right, key, value);
-    }
+    if (key < p->key)
+        p->left = put_from(p->left, key, value);
+    else if (key > p->key)
+        p->right = put_from(p->right, key, value);
     else
         p->value = value;
-    p->N = size(p->left) + size(p->right) + 1;
+    p->size = size(p->left) + size(p->right) + 1;
     return p;
 }
 
-template <typename K, typename V>
-node<K, V> *Binary_Tree<K, V>::Delete(node<K, V> *p, K key)
+templateKV Node BST<K, V>::Delete_from(Node p, K key)
 {
     if (p == nullptr)
-        return nullptr;
-    if (p->key < key)
-        p->right = Delete(p->right, key);
-    else if (p->key > key)
-        p->left = Delete(p->left, key);
-    else
-    {
+        exit(0);
+    if (key < p->key)
+        p->left = Delete_from(p->left, key);
+    else if (key > p->key)
+        p->right = Delete_from(p->right, key);
+    else {
         if (p->right == nullptr)
             return p->left;
         if (p->left == nullptr)
             return p->right;
-        node<K,V>* temp=p;
+        Node temp = p;
+        p = min(temp->right);
+        p->left = temp->left;
+        p->right = delMin(temp->right);
     }
+    p->size = size(p->left) + size(p->right) + 1;
+    return p;
+}
+
+templateKV void BST<K, V>::Delete(K key)
+{
+    root = Delete_from(root, key);
+}
+
+templateKV
+    Node
+    BST<K, V>::min(Node p)
+{
+    if (p->left == nullptr)
+        return p;
+    return min(p->left);
+}
+
+templateKV
+    Node
+    BST<K, V>::delMin(Node p)
+{
+    if (p->left == nullptr)
+        return p->right;
+    p->left = delMin(p->left);
+    p->size = size(p->left) + size(p->right) + 1;
+    return p;
 }

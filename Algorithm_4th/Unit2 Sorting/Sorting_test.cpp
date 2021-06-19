@@ -12,7 +12,7 @@ void Merge_test(){
 }
 
 void Quick_test(){
-    vector<int> v = { 100,5, 6, 3, 2, 12, 94, 12, 62, 45,1234 };
+    vector<int> v = { 100,5, 6, 3,0,2, 12, 94, 12, 62, 45,1234 };
     _sort(v,0,v.size()-1);
     for (auto i : v)
         cout << i << ' ';
@@ -20,7 +20,7 @@ void Quick_test(){
 }
 
 void heap_test(){
-    vector<int> v = { 13,20 };
+    vector<int> v = { 100,5,3,10 };
     heap_sort(v);
     for (auto i : v)
         cout << i << ' ';
@@ -30,8 +30,8 @@ void heap_test(){
 int main(void)
 {
     //Merge_test();
-    //Quick_test();
-    heap_test();
+    Quick_test();
+   // heap_test();
 
     system("pause");
     return 0;
