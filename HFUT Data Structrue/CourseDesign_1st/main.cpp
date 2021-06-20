@@ -34,6 +34,8 @@ int main(void)
             break;
         default:
             cout << "输入格式有误！请重新输入。" << endl;
+            cin.clear();
+            cin.sync();
             system("pause");
             system("cls");
             continue;

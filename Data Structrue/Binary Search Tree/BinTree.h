@@ -25,8 +25,8 @@ public:
     BinNodePosi(T) insertAsRoot(T const& e);
     BinNodePosi(T) insertAsLC(BinNodePosi(T) x, T const& e);
     BinNodePosi(T) insertAsRC(BinNodePosi(T) x, T const& e);
-    BinNodePosi(T) attachAsLC(BinNodePosi(T) x, BinTree<T>* S);
-    BinNodePosi(T) attachAsRC(BinNodePosi(T) x, BinTree<T>* S);
+    BinNodePosi(T) attachAsLC(BinNodePosi(T) x, BinTree<T>*& S);
+    BinNodePosi(T) attachAsRC(BinNodePosi(T) x, BinTree<T>*& S);
     int remove(BinNodePosi(T) x);
     BinTree<T>* secede(BinNodePosi(T) x);
     template <typename VST>
@@ -115,7 +115,7 @@ BinNodePosi(T) BinTree<T>::insertAsRC(BinNodePosi(T) x, T const& e)
 }
 
 template <typename T>
-BinNodePosi(T) BinTree<T>::attachAsLC(BinNodePosi(T) x, BinTree<T>* S)
+BinNodePosi(T) BinTree<T>::attachAsLC(BinNodePosi(T) x, BinTree<T>*& S)
 {
     if (x->lc = S->_root)
         x->lc->parent = x;
@@ -123,13 +123,13 @@ BinNodePosi(T) BinTree<T>::attachAsLC(BinNodePosi(T) x, BinTree<T>* S)
     updateHeightAbove(x);
     S->_root = NULL;
     S->_size = 0;
-    release(S);
+    delete S;
     S = NULL;
     return x;
 }
 
 template <typename T>
-BinNodePosi(T) BinTree<T>::attachAsRC(BinNodePosi(T) x, BinTree<T>* S)
+BinNodePosi(T) BinTree<T>::attachAsRC(BinNodePosi(T) x, BinTree<T>*& S)
 {
     if (x->rc = S->_root)
         x->rc->parent = x;
@@ -137,7 +137,7 @@ BinNodePosi(T) BinTree<T>::attachAsRC(BinNodePosi(T) x, BinTree<T>* S)
     updateHeightAbove(x);
     S->_root = NULL;
     S->_size = 0;
-    release(S);
+    delete S;
     S = NULL;
     return x;
 }
@@ -152,6 +152,16 @@ int BinTree<T>::remove(BinNodePosi(T) x)
     return n;
 }
 
+template <typename T>
+static int removeAt(BinNodePosi(T) x)
+{
+    if (!x)
+        return 0;
+    int n = 1 + removeAt(x->lc) + removeAt(x->rc);
+    delete x;
+    return n;
+}
+
 template <typename T, typename VST>
 void travPre_R(BinNodePosi(T) x, VST& visit)
 {
@@ -160,4 +170,14 @@ void travPre_R(BinNodePosi(T) x, VST& visit)
     visit(x->data);
     travPre_R(x->lc, visit);
     travPre_R(x->rc, visit);
+}
+
+template <typename T, typename VST>
+void travPost_R(BinNodePosi(T) x, VST& visit)
+{
+    if (!x)
+        return;
+    travPost_R(x->lc, visit);
+    travPost_R(x->rc, visit);
+    visit(x);
 }

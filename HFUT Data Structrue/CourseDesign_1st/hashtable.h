@@ -75,6 +75,8 @@ static size_t hashCode(long long i)
     return (size_t)((i >> 32) + (int)i);
 }
 
+
+//×Ö·û´®
 static size_t hashCode(string s)
 {
     int h = 0;
@@ -89,7 +91,10 @@ static size_t hashCode(string s)
 template <typename K, typename V>
 Hashtable<K, V>::Hashtable(int c)
 {
-    M = primeNLT(c, 1048576, "E:/Data-Structrue/HFUT Data Structrue/CourseDesign/prime-1048576-bitmap.txt");
+    string s="E:/Data-Structrue/HFUT Data Structrue/CourseDesign/prime-1048576-bitmap.txt";
+    const char* x=s.c_str();
+    char* t=const_cast<char*>(x);
+    M = primeNLT(c, 1048576,t );
     N = 0;
     //¿ª±ÙÍ°Êý×é
     ht = new Entry<K, V> *[M];

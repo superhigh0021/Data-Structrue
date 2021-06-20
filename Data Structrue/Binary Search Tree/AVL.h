@@ -3,7 +3,7 @@
 using namespace std;
 
 #define Balanced(x) (stature((x).lc) == stature((x).rc))
-#define BalFac(x) (stature((x).lc) - stature((x).rc))
+#define BalFac(x) (stature((x).lc) - stature((x).rc))    //Æ½ºâÒò×Ó
 #define AvlBalanced(x) ((-2 < BalFac(x)) && (BalFac(x) < 2))
 
 #define tallerChild(x) ( \
