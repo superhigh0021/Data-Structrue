@@ -33,8 +33,8 @@ void heap_test()
 int main(void)
 {
     //Merge_test();
-    //Quick_test();
-    heap_test();
+    Quick_test();
+    //heap_test();
 
     system("pause");
     return 0;
