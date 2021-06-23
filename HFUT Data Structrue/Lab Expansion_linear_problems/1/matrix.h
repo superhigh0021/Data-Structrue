@@ -124,7 +124,7 @@ void multiply_spmatrix(const vector<spmatrix>& s)
         int I = s[0].data[j].i, J = s[0].data[j].j, V = s[0].data[j].value;
         v[I - 1][J - 1] = V; //保存的行标、列标是习惯上的从1开始
     }
-    pirnt_matrix(v);
+    //pirnt_matrix(v);
 
     //再开辟一个数组存放结果
     vector<vector<int>> v2;

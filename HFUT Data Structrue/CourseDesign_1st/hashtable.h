@@ -171,7 +171,10 @@ void Hashtable<K, V>::rehash()
 {
     int old_capacity = M;
     Entry<K, V> **old_ht = ht;
-    M = primeNLT(2 * M, 1048576, "E:/Data-Structrue/HFUT Data Structrue/CourseDesign/prime-1048576-bitmap.txt");
+    string s= "E:/Data-Structrue/HFUT Data Structrue/CourseDesign/prime-1048576-bitmap.txt";
+    const char* c=s.c_str();
+    char* t=const_cast<char*>(c);
+    M = primeNLT(2 * M, 1048576, t);
     N = 0;
     ht = new Entry<K, V> *[M];
     memset(ht, 0, sizeof(Entry<K, V> *) * M);
