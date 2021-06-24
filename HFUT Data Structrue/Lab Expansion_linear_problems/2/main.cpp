@@ -13,7 +13,7 @@ int main(void)
             exit(0);
             break;
         case 1:
-            t.insert_tutor();
+            t.insert();
             system("cls");
             break;
         case 2:
