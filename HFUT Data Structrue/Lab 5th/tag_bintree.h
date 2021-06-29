@@ -251,12 +251,12 @@ protected:
     }
 
 public:
-    insert_as_lchild(BinNodePosi(T) p,const T& e){
+    void insert_as_lchild(BinNodePosi(T) p,const T& e){
         if(p->lchild==nullptr)
             p->lchild=new BinNode<T>(e);
     }
     
-    insert_as_rchild(BinNodePosi(T) p, const T& e){
+    void insert_as_rchild(BinNodePosi(T) p, const T& e){
         if(p->rchild==nullptr)
             p->rchild=new BinNode<T>(e);
     }
