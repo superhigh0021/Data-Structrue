@@ -7,6 +7,8 @@ int main()
 	
 	string s= "ABD##E##CF##G##";
     Thread_BiTree<char> tree(s);
+	// BinNodePosi(char) p=tree._pRoot;
+	// tree.insert_as_lchild(p->lchild->lchild,'S');
  
 	tree.PreOrderThreading();            //先序线索化
 	tree.PreOrder();                   //遍历先序线索二叉树

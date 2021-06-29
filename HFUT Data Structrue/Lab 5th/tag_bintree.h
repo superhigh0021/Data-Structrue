@@ -201,12 +201,14 @@ protected:
 
         if (Root->lchild == NULL) {
             Root->lchild = Prev;
-            Root->Ltag = 0;
+            Root->Ltag = 1;
         }
         if (Prev != NULL && Prev->rchild == NULL) {
             Prev->rchild = Root;
-            Prev->Rtag = 0;
+            Prev->Rtag = 1;
         }
+        if(Prev!=NULL&&Prev->rchild!=NULL)
+        Prev->parent=Root;
         Prev = Root;
     }
 
@@ -217,14 +219,14 @@ protected:
             Prev = NULL;
             while (pCur != NULL) {
                 //第一步：找树最左边的节点
-                while (pCur->lchild != Prev && pCur->Ltag == 1) //左子树
+                while (pCur->lchild != Prev && pCur->Ltag == 0) //左子树
                 {
                     pCur = pCur->lchild;
                 }
                 //循环结束后 pCur== Root 或者为空
 
                 //第二步：访问后继
-                while (pCur && pCur->Rtag == 0) {
+                while (pCur && pCur->Rtag == 1) {
                     cout << pCur->_data << ' ';
                     Prev = pCur;
                     pCur = pCur->rchild;
@@ -237,10 +239,10 @@ protected:
                 while (pCur && pCur->rchild == Prev) {
                     cout << pCur->_data << ' ';
                     Prev = pCur;
-                    pCur = pCur->rchild; //往上一级走
+                    pCur = pCur->parent; //往上一级走
                 }
                 //这里不能用NULL判断，而是用Rtag
-                if (pCur && pCur->Rtag == 1) {
+                if (pCur && pCur->Rtag == 0) {
                     pCur = pCur->rchild;
                 }
             }
@@ -248,7 +250,18 @@ protected:
         }
     }
 
-private:
+public:
+    insert_as_lchild(BinNodePosi(T) p,const T& e){
+        if(p->lchild==nullptr)
+            p->lchild=new BinNode<T>(e);
+    }
+    
+    insert_as_rchild(BinNodePosi(T) p, const T& e){
+        if(p->rchild==nullptr)
+            p->rchild=new BinNode<T>(e);
+    }
+
+    
     BinNodePosi(T) _pRoot = nullptr;
     BinNodePosi(T) Prev = nullptr; //记录
 };
