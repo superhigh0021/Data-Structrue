@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS 1
 #include <iostream>
 #include <string.h>
 using namespace std;
@@ -24,6 +23,18 @@ public:
 };
 
 template <typename T>
+void travIn_R(BinNodePosi(T) x, int n)
+{
+    if (!x)
+        return;
+    ++n;
+    travIn_R(x->lchild, n);
+    cout << x->_data <<":"<< n << "  ";
+    travIn_R(x->rchild, n);
+}
+
+
+template <typename T>
 class Thread_BiTree {
 public:
     //ÏÈÐò --´´½¨Ê÷
@@ -47,6 +58,11 @@ protected:
             _CreatTree(Root->lchild, s, size, ++index);
             _CreatTree(Root->rchild, s, size, ++index);
         }
+    }
+
+public:
+    void travIn(){
+        travIn_R(_pRoot,0);
     }
 
 public:

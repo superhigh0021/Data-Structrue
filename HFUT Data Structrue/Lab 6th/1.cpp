@@ -1,162 +1,123 @@
+#include <cstring>
 #include <iostream>
-#include <List>
+#include <vector>
 using namespace std;
 
-const int Max = 10;
+#define max_size 100
+#define max 9999
 
-typedef class UnDirectedGragh
-{
+//全局
+vector<int> visited(100, 0);
+int last;//上一个访问的顶点
+bool flag = true;
+
+class Graph {
 public:
-    UnDirectedGragh() //二维数组初始化
+    Graph(vector<vector<int>> v, vector<vector<int>> path, int m, int n)
+        : A(v)
+        , path(path)
+        , m(m)
+        , n(n)
     {
-        edge = 0;
-        for (int i = 0; i < Max; i++)
-        {
-            node[i] = -1; //初始化结点数组
-            for (int j = 0; j < Max; j++)
-                gragh[i][j] = 99999;
-        }
     }
-    void Create(); //创建、自定义图结构
-    bool Judge();  //判断是否是树
-    //一个无向图G是一棵树的条件为：G必须是无回路的连通图或n-1条边的连通图
-    void Floyd();                                 //弗洛伊德最短路径算法
-    void print();                                 //打印图结构
-    void search(int entrance, int mid, int exit); //递归查找最短路径
-    void next(int x);                             //遍历图结构判断是否为无环图
-
-private:
-    int gragh[Max][Max]; //二维数组储存图
-    int node[Max];       //结点数组用于判断结点是否创立
-    int path[Max][Max];
-    list<int> List; //最短路径
-    int edge;       //图边数
-} UGragh;
-
-void UGragh::Create()
-{
-    int x, y;
-    bool judge = true;
-    while (judge)
+    vector<vector<int>> A;
+    vector<vector<int>> path;
+    void DFSTraverse();
+    void Floyd()
     {
-        cout << "请输入建立连通的两节点下标：";
-        cin >> x >> y;
-        node[x] = node[y] = 0;
-        cout << "请输入路径长度：";
-        cin >> gragh[x][y];
-        gragh[y][x] = gragh[x][y];
-        cout << "建立成功！是否继续输入？ 1、是 0、否";
-        edge++;
-        cin >> judge;
-        system("cls");
-    }
-}
+        //弗洛伊德(Floyd)核心语句
+        for (int k = 1; k <= n; k++)
+            for (int i = 1; i <= n; i++)
+                for (int j = 1; j <= n; j++)
+                    if (A[i][k] + A[k][j] < A[i][j]) {
+                        A[i][j] = A[i][k] + A[k][j];
+                        path[i][j] = path[i][k];
+                    }
 
-void UGragh::print()
-{
-    for (int i = 0; i < Max; i++)
-    {
-        if (node[i] == 0)
-        {
-            cout << "G[" << i << "] -> ";
-            for (int j = 0; j < Max; j++)
-            {
-                if (gragh[i][j] != 99999)
-                    cout << "G[" << j << "] = " << gragh[i][j] << "  ";
-            }
+        cout << endl
+             << "最短距离矩阵为：" << endl;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++)
+                cout << A[i][j] << " ";
             cout << endl;
         }
-    }
-}
 
-void UGragh::next(int x)
-{
-    for (int i = 0; i < Max; i++)
-    {
-        if (gragh[x][i] != 99999)
-        {
-            node[x] = 1;
-            node[i] = 1;
-            next(++i);
+        int v1, v2, z;
+        cout << "输入两个点，输出之间路径" << endl;
+        cin >> v1 >> v2;
+        z = path[v1][v2];
+        cout << v1;
+        while (z != v2) {
+            cout << "->" << z;
+            z = path[z][v2];
         }
+        cout << "->" << v2;
     }
-}
 
-bool UGragh::Judge()
-{
-    int x = 0;
-    for (int i = 0; i < Max; i++)
-        if (node[i] == 0)
-            x++;
-    if (edge == x - 1)
+private:
+    int n; //点的个数
+    int m; //边的个数
+
+    void DFS(int root)
     {
-        for (int i = 0; i < Max; i++)
-            if (node[i] == 0)
-                next(i);
-        for (int i = 0; i < Max; i++)
-        {
-            if (node[i] == 0)
-                return false;
-        }
-        return true;
-    }
-    else
-        return false;
-}
-
-void UGragh::Floyd()
-{
-    int entrance, exit;
-    cout << "请输入 入口和出口：";
-    cin >> entrance >> exit;
-
-    for (int i = 0; i < Max; i++)
-        for (int j = 0; j < Max; j++)
-            path[i][j] = -1;
-    for (int k = 0; k < Max; k++)
-        for (int i = 0; i < Max; i++)
-            for (int j = 0; j < Max; j++)
+        visited[root] = 1;
+        for (int child = 1; child <= n; child++) {
+            if (child != root && A[root][child] != max) //邻接矩阵中节点v的邻接点
             {
-                if (gragh[i][j] > gragh[i][k] + gragh[k][j])
-                {
-                    gragh[i][j] = gragh[i][k] + gragh[k][j];
-                    path[i][j] = k;
+                if (visited[child] == 1 && last != child) 
+                //而且还访问过(而且为状态1，说明不是回溯过来的顶点)，说明存在环(判断i不是v的父节点)
+                    flag = false;
+                else if (visited[child] == 0) {
+                    last = root; //更新last
+                    DFS(child);
                 }
             }
-    cout << "最短路径长度为：" << gragh[entrance][exit] << endl;
+        }
+        visited[root] = 2; //遍历完所有的邻接点才变为状态2
+    }
+};
 
-    List.push_back(entrance);
-    List.push_back(exit);
-    search(entrance, path[entrance][exit], exit);
-    cout << "最短路径为：";
-    for (list<int>::iterator it = List.begin(); it != List.end(); it++)
-        cout << "G[" << (*it) << "] -> ";
-    cout << "NULL" << endl;
+void Graph::DFSTraverse()
+{
+    for (int i = 1; i <= n; i++)
+        if (!visited[i]) {
+            DFS(i);
+        }
 }
 
-void UGragh::search(int entrance, int mid, int exit)
+int main(void)
 {
-    list<int>::iterator m;
-    for (list<int>::iterator it = List.begin(); it != List.end(); it++)
-    {
-        if (*it == entrance)
-            m = ++it;
+    int m, n;
+    cout << "请输入点的个数和边的个数:" << endl;
+    cin >> n >> m;
+    vector<vector<int>> v;
+    v.resize(max_size, vector<int>(max_size));
+    vector<vector<int>> path;
+    path.resize(max_size, vector<int>(max_size));
+    for (int i = 1; i <= n; ++i)
+        for (int j = 1; j <= n; ++j)
+            if (i == j)
+                v[i][j] = 0;
+            else
+                v[i][j] = max;
+    //读入边
+    cout << "输入点到点的距离" << endl;
+    for (int i = 1; i <= m; i++) {
+        int t1, t2, t3;
+        cin >> t1 >> t2 >> t3;
+        v[t1][t2] = t3;
+        v[t2][t1] = t3;
+        path[t1][t2] = t2;
     }
-    if (mid != -1)
-    {
-        List.insert(m, mid);
-        search(entrance, path[entrance][mid], mid);
-        search(mid, path[mid][exit], exit);
-    }
-}
-
-int main()
-{
-    UGragh G;
-    G.Create();
-    G.print();
-    cout << (G.Judge() ? "该图是树 " : "该图不是树 ") << endl;
-    G.Floyd();
+    Graph gg(v, path, m, n);
+    gg.DFSTraverse();
+    if (flag == false)
+        cout << "该图有环，不能构成树！" << endl;
+    else
+        cout << "该图无环，可以构成树" << endl;
+    
+    gg.Floyd();
 
     system("pause");
+    return 0;
 }

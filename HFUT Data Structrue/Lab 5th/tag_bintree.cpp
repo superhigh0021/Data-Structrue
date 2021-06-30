@@ -7,6 +7,7 @@ int main()
 	
 	string s= "ABD##E##CF##G##";
     Thread_BiTree<char> tree(s);
+    tree.travIn();
 	// BinNodePosi(char) p=tree._pRoot;
 	// tree.insert_as_lchild(p->lchild->lchild,'S');
  
