@@ -11,4 +11,7 @@ struct GLNode
     GLNode *up=nullptr;        //上一层
     GLNode *nextlevel=nullptr; //下一层
     GLNode *next=nullptr;      //同一层的下一个节点
+    GLNode *next_direct=nullptr;
+    GLNode *up_direct=nullptr;
+    bool direct_flag=false;
 };

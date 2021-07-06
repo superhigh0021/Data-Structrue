@@ -3,26 +3,27 @@
 #include "generalized_list.h"
 using namespace std;
 
-class tutor {
+class tutor
+{
 public:
     tutor();
     void showmenu();
     void insert();
     void search();
     void delete_member();
-    void Delete_member(GLNode* head, string name);
+    void Delete_member(GLNode *head, string name);
 
     //均为头结点，不存放数据
-    GLNode* Lhead1; //导师
-    GLNode* Lhead2; //研究生
-    GLNode* Lhead3; //本科生
+    GLNode *Lhead1; //导师
+    GLNode *Lhead2; //研究生
+    GLNode *Lhead3; //本科生
 private:
     int size1 = 0, size2 = 0, size3 = 0;
 
     void insert_tutor();
     void insert_graduate();
     void insert_undergraduate();
-    void Search(GLNode* head, const string& name);
+    void Search(GLNode *head, const string &name);
 };
 
 tutor::tutor()
@@ -47,7 +48,8 @@ void tutor::showmenu()
 void tutor::insert()
 {
     system("cls");
-    while (true) {
+    while (true)
+    {
         cout << "********************************************" << endl;
         cout << "**************  增加人员信息  **************" << endl;
         cout << "**************  0.增加导师    *************" << endl;
@@ -60,7 +62,8 @@ void tutor::insert()
         int i = 0;
         cout << "请输入你的选择：";
         cin >> i;
-        switch (i) {
+        switch (i)
+        {
         case 0:
             insert_tutor();
             break;
@@ -84,10 +87,11 @@ void tutor::insert_tutor()
     cout << "请输入导师姓名：";
     string name;
     cin >> name;
-    GLNode* p = Lhead1;
+    GLNode *p = Lhead1;
     size1++;
     int n = size1;
-    while (n != 1) {
+    while (n != 1)
+    {
         p = p->next;
         --n;
     }
@@ -102,10 +106,11 @@ void tutor::insert_graduate()
     cout << "请输入研究生姓名：";
     string name;
     cin >> name;
-    GLNode* p = Lhead2;
+    GLNode *p = Lhead2;
     size2++;
     int n = size2;
-    while (n != 1) {
+    while (n != 1)
+    {
         p = p->next;
         --n;
     }
@@ -116,8 +121,9 @@ void tutor::insert_graduate()
     string name_tutor;
     cin >> name_tutor;
 
-    GLNode* t = Lhead1;
-    while (t->next != nullptr) {
+    GLNode *t = Lhead1;
+    while (t->next != nullptr)
+    {
         t = t->next;
         if (t->name == name_tutor)
             break;
@@ -135,10 +141,11 @@ void tutor::insert_undergraduate()
     cout << "请输入本科生姓名：";
     string name;
     cin >> name;
-    GLNode* p = Lhead3;
+    GLNode *p = Lhead3;
     size3++;
     int n = size3;
-    while (n != 1) {
+    while (n != 1)
+    {
         p = p->next;
         --n;
     }
@@ -147,88 +154,107 @@ void tutor::insert_undergraduate()
     p->name = name;
     cout << "他是 1.由导师负责  2.由研究生负责";
     int flag;
-    cin>>flag;
-    if (flag == 1) {
+    cin >> flag;
+    if (flag == 1)
+    {
         //他直接由导师负责
         string name_tutor;
         cout << "他的导师的姓名是：";
         cin >> name_tutor;
-        GLNode* t = Lhead1;
-        while (t->next != nullptr) {
+        GLNode *t = Lhead1;
+        while (t->next != nullptr)
+        {
             t = t->next;
             if (t->name == name_tutor)
                 break;
         }
-        ++t->num;
+        t->direct_flag = true;
+        t->next_direct = p;
+        p->direct_flag = true;
+        p->up_direct = t;
+    }
+    else if (flag == 2)
+    {
+        //由研究生负责
+        string name_graduate;
+        cout << "请输入负责他的研究生的姓名:";
+        cin >> name_graduate;
+        GLNode *t = Lhead2;
+        while (t->next != nullptr)
+        {
+            t = t->next;
+            if (t->name == name_graduate)
+                break;
+        }
         if (t->nextlevel)
             t->nextlevel->next = p;
         else
             t->nextlevel = p;
         ++t->num;
         p->up = t;
-    } else if (flag == 2) {
-        //由研究生负责
-        string name_graduate;
-        cout << "请输入负责他的研究生的姓名:";
-        cin >> name_graduate;
-        GLNode* t = Lhead2;
-        while (t->next != nullptr) {
-            t = t->next;
-            if (t->name == name_graduate)
-                break;
-            if (t->nextlevel)
-                t->nextlevel->next = p;
-            else
-                t->nextlevel = p;
-            ++t->num;
-            p->up = t;
-        }
     }
 }
 
 //不同身份传入每一层对应的头结点
-void tutor::Search(GLNode* head, const string& name)
+void tutor::Search(GLNode *head, const string &name)
 {
-    GLNode* p = head;
-    while (p->next != nullptr) {
+    GLNode *p = head;
+    while (p->next != nullptr)
+    {
         p = p->next;
-        if (p->name == name) {
+        if (p->name == name)
+        {
             cout << "查找成功！" << endl;
-            if (head == Lhead1) {
+            if (head == Lhead1)
+            {
                 //导师
 
-                cout << "该人为导师,";
-                if (p->nextlevel->nextlevel) {
-                    //说明他带了研究生
-                    p = p->nextlevel;
-                    cout << "他负责的研究生是" << p->name << endl;
+                cout << "该人为导师,他负责的研究生为：";
+                GLNode *s = p;
+                int size = p->num;
+                p = p->nextlevel;
+                while (size != 0)
+                {
+                    cout << p->name << ' ';
+                    if (p->next != nullptr)
+                        p = p->next;
+                    --size;
                 }
                 cout << endl;
-            } else if (head == Lhead2) {
+
+                if (s->direct_flag == true)
+                    cout << "他直接负责的本科生有:" << s->next_direct->name;
+            }
+            else if (head == Lhead2)
+            {
                 //研究生
                 cout << "该人为研究生" << endl
                      << "他的导师是：";
                 cout << p->up->name << endl;
-                if (p->nextlevel != nullptr) {
+                if (p->nextlevel != nullptr)
+                {
                     cout << "他负责的本科生:";
+                    int size = p->num;
                     p = p->nextlevel;
-                    cout << p->name << ' ';
-                    while (p->next != nullptr) {
-                        p = p->next;
+                    while (size != 0)
+                    {
                         cout << p->name << ' ';
+                        if (p->next != nullptr)
+                            p = p->next;
+                        --size;
                     }
                     cout << endl;
-                } else
-                    cout << "他的导师不带本科生" << endl;
-            } else if (head == Lhead3) {
-                //本科生
-                if (p->up->up == nullptr)
-                    //说明没有所属的导师没有研究生
-                    cout << "他的导师是：" << p->up->name << endl;
-                else {
-                    cout << "他的导师是：" << p->up->up->name << endl
-                         << "负责他的研究生是：" << p->up->name << endl;
                 }
+                else
+                    cout << "他的导师不带本科生" << endl;
+            }
+            else if (head == Lhead3)
+            {
+                //本科生
+                if (p->direct_flag == true)
+                    cout << "他直接由导师负责，他的导师是：" << p->up_direct->name;
+                else
+                    cout << "他所属的研究生是：" << p->up->name;
             }
             system("pause");
             return;
@@ -248,7 +274,8 @@ void tutor::search()
     cin >> id;
     cout << "请输入他的姓名：";
     cin >> name;
-    switch (id) {
+    switch (id)
+    {
     case 1:
         Search(Lhead1, name);
         break;
@@ -269,7 +296,8 @@ void tutor::delete_member()
     cin >> id;
     cout << "请输入他的姓名：";
     cin >> name;
-    switch (id) {
+    switch (id)
+    {
     case 1:
         Delete_member(Lhead2, name);
         break;
@@ -279,25 +307,33 @@ void tutor::delete_member()
     }
 }
 
-void tutor::Delete_member(GLNode* head, string name)
+void tutor::Delete_member(GLNode *head, string name)
 {
-    GLNode* p = head;
-    while (p->next != nullptr) {
+    GLNode *p = head;
+    while (p->next != nullptr)
+    {
         p = p->next;
-        if (p->name == name) {
+        if (p->name == name)
+        {
             //定位到那个节点了！
-            if (head == Lhead2) {
+            if (head == Lhead2)
+            {
                 //要删除研究生
                 p->up->nextlevel = p->nextlevel;
                 p->nextlevel->up = p->up;
                 p->up->num = p->num;
-            } else if (head = Lhead3) {
+            }
+            else if (head = Lhead3)
+            {
                 //要删除本科生
-                if (p->up->up == nullptr) {
+                if (p->up->up == nullptr)
+                {
                     //没有研究生，导师直接带本科生
                     p->up->nextlevel = nullptr;
                     p->num = 0;
-                } else {
+                }
+                else
+                {
                     //导师带了研究生
                     p->up->nextlevel = nullptr;
                     p->up->num = 0;

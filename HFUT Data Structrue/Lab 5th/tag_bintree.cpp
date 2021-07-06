@@ -7,10 +7,13 @@ int main()
 	
 	string s= "ABD##E##CF##G##";
     Thread_BiTree<char> tree(s);
-    tree.travIn();
-	// BinNodePosi(char) p=tree._pRoot;
-	// tree.insert_as_lchild(p->lchild->lchild,'S');
- 
+    tree.travIn();//中序遍历显示层数
+
+
+	BinNodePosi(char) p=tree._pRoot;
+	tree.insert_as_lchild(p->lchild->lchild,'H');
+
+
 	tree.PreOrderThreading();            //先序线索化
 	tree.PreOrder();                   //遍历先序线索二叉树
 	cout << endl << "------------------------" << endl;
