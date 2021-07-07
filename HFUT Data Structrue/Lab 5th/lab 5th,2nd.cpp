@@ -1,12 +1,15 @@
 #include <fstream>
 #include <iostream>
 using namespace std;
+
 ifstream forest; //定义全局的输入流文件
+
 struct bnode {
     char data;
     bnode* firstchild;
     bnode* nextbrother;
 };
+
 void filecreat(bnode*& T)
 {
     char num;
@@ -20,6 +23,7 @@ void filecreat(bnode*& T)
         filecreat(T->nextbrother);
     }
 }
+
 void cmdcreat(bnode*& T)
 {
     char num;
@@ -35,6 +39,7 @@ void cmdcreat(bnode*& T)
         cmdcreat(T->nextbrother);
     }
 }
+
 void creattree(bnode T[], int n)
 {
     for (int i = 0; i < n; i++) {
@@ -42,14 +47,16 @@ void creattree(bnode T[], int n)
             T[i].nextbrother = &T[i + 1];
     }
 }
+
 void Preorder(bnode*& T)
 {
     if (T != NULL) {
-        Preorder(T->firstchild);
         cout << T->data;
+        Preorder(T->firstchild);
         Preorder(T->nextbrother);
     }
 }
+
 void Inorder(bnode*& T)
 {
     if (T != NULL) {
@@ -58,13 +65,14 @@ void Inorder(bnode*& T)
         Inorder(T->nextbrother);
     }
 }
+
 void Postorder(bnode*& T)
 {
-    if (T != NULL) {
-        Postorder(T->firstchild);
-        cout << T->data;
-        Postorder(T->nextbrother);
-    }
+    if (T == NULL)
+        return;
+    Postorder(T->firstchild);
+    cout << T->data;
+    Postorder(T->nextbrother);
 }
 
 int main()
@@ -75,20 +83,22 @@ int main()
     cin >> n;
     bnode* B = new bnode[n]; //用来存储每棵树的根节点
     int num = 0; //记录当前是第几棵树
-    while (1) {
+    while (true) {
         cout << "用命令行生成树输入1   用文件生成树输入2   让树变成森林输入3   ";
         cout << "前序遍历输入4   中序遍历输入5   后序遍历输入6   结束输入0" << endl;
         cin >> i;
-        if (i == 0)
-            break;
-        if (i == 1) {
+        switch (i) {
+        case 0:
+            exit(0);
+        case 1: {
             bnode* T = NULL;
             cout << "输入根节点";
             cmdcreat(T);
             *(B + num) = *T;
             num++;
+            break;
         }
-        if (i == 2) {
+        case 2: {
             forest.open("E:\\Data-Structrue\\HFUT Data Structrue\\Lab 5th\\forest1.txt", ios::in);
             bnode* T1 = NULL;
             filecreat(T1);
@@ -107,14 +117,24 @@ int main()
             *(B + num) = *T3;
             num++;
             forest.close();
-            if (i == 3)
-                creattree(B, n);
-            if (i == 4)
-                Preorder(B);
-            if (i == 5)
-                Inorder(B);
-            if (i == 6)
-                Postorder(B);
+            break;
+        }
+        case 3:
+            creattree(B, n);
+            cout << endl;
+            break;
+        case 4:
+            Preorder(B);
+            cout << endl;
+            break;
+        case 5:
+            Inorder(B);
+            cout << endl;
+            break;
+        case 6:
+            Postorder(B);
+            cout << endl;
+            break;
         }
     }
     system("pause");
