@@ -1,8 +1,8 @@
 #pragma once
 #include <ctime>
-#include"AVL_search.h"
-#include"hash_open.h"
-#include"hash_list.h"
+#include"平衡二叉树查找.hpp"
+#include"哈希查找-开放定址法.hpp"
+#include"哈希查找-链地址法.hpp"
 #include<iostream>
 using namespace std;
 class Search {
