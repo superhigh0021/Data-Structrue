@@ -1,9 +1,16 @@
-#include<iostream>
+#include <iostream>
+#include <cstring>
 using namespace std;
 
-int main(void){
-    int x=65535;
-    cout<<x*x<<endl;
+
+int main(void)
+{
+    char s[] = "abcdefg";
+    char *t = s + strlen(s);
+    if ("a" > t)
+        cout << "yes!" << endl;
+    else
+        cout << "no!" << endl;
 
     system("pause");
     return 0;

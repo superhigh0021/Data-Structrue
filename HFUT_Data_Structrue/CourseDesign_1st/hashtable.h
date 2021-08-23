@@ -91,7 +91,7 @@ static size_t hashCode(string s)
 template <typename K, typename V>
 Hashtable<K, V>::Hashtable(int c)
 {
-    string s="E:/Data-Structrue/HFUT Data Structrue/CourseDesign/prime-1048576-bitmap.txt";
+    string s="E:/Data-Structrue/HFUT_Data_Structrue/CourseDesign/prime-1048576-bitmap.txt";
     const char* x=s.c_str();
     char* t=const_cast<char*>(x);
     M = primeNLT(c, 1048576,t );
@@ -171,7 +171,7 @@ void Hashtable<K, V>::rehash()
 {
     int old_capacity = M;
     Entry<K, V> **old_ht = ht;
-    string s= "E:/Data-Structrue/HFUT Data Structrue/CourseDesign/prime-1048576-bitmap.txt";
+    string s= "E:/Data-Structrue/HFUT_Data_Structrue/CourseDesign/prime-1048576-bitmap.txt";
     const char* c=s.c_str();
     char* t=const_cast<char*>(c);
     M = primeNLT(2 * M, 1048576, t);

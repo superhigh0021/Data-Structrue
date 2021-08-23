@@ -18,7 +18,7 @@ private:
 
 TelephoneNumber::TelephoneNumber()
 {
-    fstream txtfile("E:/Data-Structrue/HFUT Data Structrue/CourseDesign_1st/telephone_number.txt");
+    fstream txtfile("E:/Data-Structrue/HFUT_Data_Structrue/CourseDesign_1st/telephone_number.txt");
     string id;
     long long number;
     char flag;
@@ -52,7 +52,7 @@ void TelephoneNumber::exitsystem()
 
 void push_in_file(const string& id, long long number)
 {
-    fstream txtfile("E:/Data-Structrue/HFUT Data Structrue/CourseDesign_1st/telephone_number.txt");
+    fstream txtfile("E:/Data-Structrue/HFUT_Data_Structrue/CourseDesign_1st/telephone_number.txt");
     txtfile.seekp(-1, ios::end);
     txtfile << '#' << number << ' ' << id << endl
             << '%';
