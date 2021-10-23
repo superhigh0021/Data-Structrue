@@ -5,7 +5,7 @@ using namespace std;
 // template <typename T>
 // int partition(vector<T> &v, int lo, int hi) {
 //     //swap(v[lo], v[lo + rand() % (hi - lo + 1)]);
-//     T pivot = v[lo];  //¼´Ëæ»úÑ¡È¡
+//     T pivot = v[lo];  //ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡È¡
 //     while (lo < hi) {
 //         while ((lo < hi) && (pivot <= v[hi])) hi--;
 //         v[lo] = v[hi];
@@ -51,7 +51,6 @@ int main(void) {
 
     for (auto i : v) cout << i << ' ';
 
-    system("pause");
 
     return 0;
 }

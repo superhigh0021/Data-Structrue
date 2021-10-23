@@ -12,6 +12,5 @@ int main(void)
     else
         cout << "no!" << endl;
 
-    system("pause");
     return 0;
 }

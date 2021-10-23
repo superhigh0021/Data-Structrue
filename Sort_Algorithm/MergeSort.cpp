@@ -33,6 +33,5 @@ int main(void) {
     MergeSort(v, 0, v.size() - 1);
     for (auto i : v) cout << i << ' ';
     
-    system("pause");
     return 0;
 }

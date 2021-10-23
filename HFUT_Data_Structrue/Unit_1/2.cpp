@@ -14,6 +14,5 @@ int main(void) {
     for (int j = 0; j < v.size(); ++j) sum = sum * x + v[j];
 
     cout << sum << endl;
-    system("pause");
     return 0;
 }

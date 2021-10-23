@@ -15,6 +15,5 @@ int main(void)
     s.Delete(4);
     cout<<s.get(3);
 
-    system("pause");
     return 0;
 }

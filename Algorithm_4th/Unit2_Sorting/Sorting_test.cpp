@@ -36,6 +36,5 @@ int main(void)
     //Quick_test();
     //heap_test();
 
-    system("pause");
     return 0;
 }

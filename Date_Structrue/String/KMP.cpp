@@ -7,6 +7,5 @@ int main(void){
     cout<<match(t,p);
 
 
-    system("pause");
     return 0;
 }

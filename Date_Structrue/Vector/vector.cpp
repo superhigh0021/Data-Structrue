@@ -3,8 +3,8 @@
 #include "vector.h"
 using namespace std;
 
-typedef int Rank;          //ÖÈ
-#define DEFAULT_CAPACITY 3 //Ä¬ÈÏ³õÊ¼ÈÝÁ¿
+typedef int Rank;          //ï¿½ï¿½
+#define DEFAULT_CAPACITY 3 //Ä¬ï¿½Ï³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
 
 void testIncrease()
 {
@@ -82,7 +82,6 @@ void test()
     //testUniquify();
     testMerge();
 
-    system("pause");
 }
 
 int main(void)

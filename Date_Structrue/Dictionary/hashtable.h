@@ -1,5 +1,5 @@
 #include "Bitmap.h"
-#include "Dictionary.h"
+#include "dictionary.h"
 #include "release.h"
 #include <cstring>
 #include <iostream>
@@ -24,20 +24,20 @@ struct Entry {
 template <typename K, typename V>
 class Hashtable : public Dictionary<K, V> {
 private:
-    Entry<K, V>** ht; //Í°Êı×é£¬´æ·Å´ÊÌõÊı×é
-    int M; //Í°Êı×éÈİÁ¿
-    int N; //´ÊÌõÊıÁ¿
-    Bitmap* lazyRemoval; //ÀÁ¶èÉ¾³ı±ê¼Ç
+    Entry<K, V>** ht; //Í°ï¿½ï¿½ï¿½é£¬ï¿½ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    int M; //Í°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    int N; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    Bitmap* lazyRemoval; //ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½
 #define lazilyRemoved(x) (lazyRemoval->test(x))
 #define markAsRemoved(x) (lazyRemoval->set(x))
 
 protected:
-    int probe4Hit(const K& k); //ÑØ¹Ø¼üÂëk¶ÔÓ¦µÄÊÔÌ½Á´£¬ÕÒµ½´ÊÌõÆ¥ÅäµÄÍ°
-    int probe4Free(const K& k); //ÑØ¹Ø¼üÂëk¶ÔÓ¦µÄÊÔÌ½Á´£¬ÕÒµ½Ê×¸ö¿ÉÓÃ¿ÕÍ°
-    void rehash(); //ÖØÉ¢ÁĞËã·¨£ºÀ©³äÍ°Êı×é£¬±£Ö¤×°ÌîÒò×ÓÔÚ¾¯½äÏßÒÔÏÂ
+    int probe4Hit(const K& k); //ï¿½Ø¹Ø¼ï¿½ï¿½ï¿½kï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½ï¿½Í°
+    int probe4Free(const K& k); //ï¿½Ø¹Ø¼ï¿½ï¿½ï¿½kï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½×¸ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½Í°
+    void rehash(); //ï¿½ï¿½É¢ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ï¿½ï¿½é£¬ï¿½ï¿½Ö¤×°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 public:
-    Hashtable(int c = 5); //´´½¨Ò»¸öÈİÁ¿²»Ğ¡ÓÚcµÄÉ¢ÁĞ±í
+    Hashtable(int c = 5); //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½cï¿½ï¿½É¢ï¿½Ğ±ï¿½
     // ~Hashtable();
     int size() const { return N; }
     bool put(K, V);
@@ -45,7 +45,7 @@ public:
     bool remove(K k);
 };
 
-//¸ù¾İfileÎÄ¼şÖĞµÄ¼ÇÂ¼£¬ÔÚ[c,n)ÄÚÈ¡×îĞ¡µÄËØÊı
+//ï¿½ï¿½ï¿½ï¿½fileï¿½Ä¼ï¿½ï¿½ĞµÄ¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½[c,n)ï¿½ï¿½È¡ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 int primeNLT(int c, int n, char* file)
 {
     Eratosthenes(n, file);
@@ -54,17 +54,17 @@ int primeNLT(int c, int n, char* file)
         if (B.test(c))
             c++;
         else
-            return c; //·µ»ØÊ×¸ö·¢ÏÖµÄËØÊı
+            return c; //ï¿½ï¿½ï¿½ï¿½ï¿½×¸ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½
     return c;
 }
 
-//×Ö·û
+//ï¿½Ö·ï¿½
 static size_t hashCode(char c)
 {
     return (size_t)c;
 }
 
-//ÕûÊıÒÔ¼°long long int
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½long long int
 static size_t hashCode(int k)
 {
     return (size_t)k;
@@ -90,7 +90,7 @@ Hashtable<K, V>::Hashtable(int c)
 {
     M = primeNLT(c, 1048576, "E:/Data-Structrue/Data Structrue/Dictionary/prime-1048576-bitmap.txt");
     N = 0;
-    //¿ª±ÙÍ°Êı×é
+    //ï¿½ï¿½ï¿½ï¿½Í°ï¿½ï¿½ï¿½ï¿½
     ht = new Entry<K, V>*[M];
     memset(ht, 0, sizeof(Entry<K, V>*) * M);
     lazyRemoval = new Bitmap(M);
@@ -106,22 +106,22 @@ Hashtable<K, V>::Hashtable(int c)
 //     release(lazyRemoval);
 // }
 
-//´ÊÌõµÄ²éÕÒËã·¨
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ã·¨
 template <typename K, typename V>
 V* Hashtable<K, V>::get(K k)
 {
     int r = probe4Hit(k);
-    //½ûÖ¹´ÊÌõµÄkeyÖµÀ×Í¬
+    //ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½keyÖµï¿½ï¿½Í¬
     return ht[r] ? &(ht[r]->value) : NULL;
 }
 
-//ÑØ¹Ø¼üÂëk¶ÔÓ¦µÄ²éÕÒÁ´£¬ÕÒµ½ÓëÖ®Æ¥ÅäµÄÍ°
+//ï¿½Ø¹Ø¼ï¿½ï¿½ï¿½kï¿½ï¿½Ó¦ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½Ö®Æ¥ï¿½ï¿½ï¿½Í°
 template <typename K, typename V>
 int Hashtable<K, V>::probe4Hit(const K& k)
 {
-    int r = k % M; //´ÓÆğÊ¼Í°´¥·¢
+    int r = k % M; //ï¿½ï¿½ï¿½ï¿½Ê¼Í°ï¿½ï¿½ï¿½ï¿½
     while ((ht[r] && (k != ht[r]->key)) || (!ht[r] && lazilyRemoved(r)))
-        r = (r + 1) % M; //ÑØ²éÕÒÁ´ÏßĞÔÊÔÌ½£ºÌø¹ıËùÓĞ³åÍ»µÄÍ°ÒÔ¼°´øÀÁ¶èÉ¾³ı±ê¼ÇµÄÍ°
+        r = (r + 1) % M; //ï¿½Ø²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ³ï¿½Í»ï¿½ï¿½Í°ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½Çµï¿½Í°
     return r;
 }
 

@@ -18,6 +18,5 @@ int main(void){
     for(auto i:v)
     cout<<i<<' ';
     
-    system("pause");
     return 0;
 }

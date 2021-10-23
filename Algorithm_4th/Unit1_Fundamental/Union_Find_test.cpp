@@ -6,7 +6,6 @@ int main(void){
     uu._Union(1,2);
     uu._Union(2,3);
     cout<<uu.Is_Connected(1,4);
-
-    system("pause");
+    
     return 0;
 }
