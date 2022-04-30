@@ -1,101 +1,179 @@
 #include <iostream>
 using namespace std;
 
-using Rank = int; //ÖÈ
-#define DEFAULT_CAPACITY 3 //Ä¬ÈÏµÄ³õÊ¼ÈİÁ¿£¨Êµ¼ÊÓ¦ÓÃÖĞ¿ÉÉèÖÃÎª¸ü´ó£©
+using Rank = int;          //ç§©
+#define DEFAULT_CAPACITY 3 //é»˜è®¤çš„åˆå§‹å®¹é‡(å®é™…åº”ç”¨ä¸­å¯èƒ½æ›´å¤§)
 
 template <typename T>
-class Vector { //ÏòÁ¿Ä£°åÀà
-protected:
-    Rank _size;
-    int _capacity;
-    T* _elem; //¹æÄ£¡¢ÈİÁ¿¡¢Êı¾İÇø
-    void copyFrom(T const* A, Rank lo, Rank hi); //¸´ÖÆÊı×éÇø¼äA[lo, hi)
-    void expand(); //¿Õ¼ä²»×ãÊ±À©Èİ
-    void shrink(); //×°ÌîÒò×Ó¹ıĞ¡Ê±Ñ¹Ëõ
-    bool bubble(Rank lo, Rank hi); //É¨Ãè½»»»
-    void bubbleSort(Rank lo, Rank hi); //ÆğÅİÅÅĞòËã·¨
-    Rank maxItem(Rank lo, Rank hi); //Ñ¡È¡×î´óÔªËØ
-    void selectionSort(Rank lo, Rank hi); //Ñ¡ÔñÅÅĞòËã·¨
-    void merge(Rank lo, Rank mi, Rank hi); //¹é²¢Ëã·¨
-    void mergeSort(Rank lo, Rank hi); //¹é²¢ÅÅĞòËã·¨
-    void heapSort(Rank lo, Rank hi); //¶ÑÅÅĞò£¨ÉÔºó½áºÏÍêÈ«¶Ñ½²½â£©
-    Rank partition(Rank lo, Rank hi); //Öáµã¹¹ÔìËã·¨
-    void quickSort(Rank lo, Rank hi); //¿ìËÙÅÅĞòËã·¨
-    void shellSort(Rank lo, Rank hi); //Ï£¶ûÅÅĞòËã·¨
+class Vector {
 public:
-    // ¹¹Ôìº¯Êı
-    Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0) //ÈİÁ¿Îªc¡¢¹æÄ£Îªs¡¢ËùÓĞÔªËØ³õÊ¼Îªv
-    {
+    //! æ„é€ å‡½æ•°
+    Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0) {
+        //! s < c (size < capacity)
         _elem = new T[_capacity = c];
         for (_size = 0; _size < s; _elem[_size++] = v)
             ;
-    } //s<=c
-    Vector(T const* A, Rank n) { copyFrom(A, 0, n); } //Êı×éÕûÌå¸´ÖÆ
-    Vector(T const* A, Rank lo, Rank hi) { copyFrom(A, lo, hi); } //Çø¼ä
-    Vector(Vector<T> const& V) { copyFrom(V._elem, 0, V._size); } //ÏòÁ¿ÕûÌå¸´ÖÆ
-    Vector(Vector<T> const& V, Rank lo, Rank hi) { copyFrom(V._elem, lo, hi); } //Çø¼ä
-    // Îö¹¹º¯Êı
-    ~Vector() { delete[] _elem; } //ÊÍ·ÅÄÚ²¿¿Õ¼ä
-    // Ö»¶Á·ÃÎÊ½Ó¿Ú
-    Rank size() const { return _size; } //¹æÄ£
-    bool empty() const { return !_size; } //ÅĞ¿Õ
-    int disordered() const;
-    Rank find(T const& e) const { return find(e, 0, _size); } //ÎŞĞòÏòÁ¿ÕûÌå²éÕÒ
-    Rank find(T const& e, Rank lo, Rank hi) const; //ÎŞĞòÏòÁ¿Çø¼ä²éÕÒ
-    Rank search(T const& e) const //ÓĞĞòÏòÁ¿ÕûÌå²éÕÒ
-    {
-        return (0 >= _size) ? -1 : search(e, 0, _size);
     }
-    Rank search(T const& e, Rank lo, Rank hi) const; //ÓĞĞòÏòÁ¿Çø¼ä²éÕÒ
-        // ¿ÉĞ´·ÃÎÊ½Ó¿Ú
-    T& operator[](Rank r); //ÖØÔØÏÂ±ê²Ù×÷·û£¬¿ÉÒÔÀàËÆÓÚÊı×éĞÎÊ½ÒıÓÃ¸÷ÔªËØ
-    const T& operator[](Rank r) const; //½öÏŞÓÚ×öÓÒÖµµÄÖØÔØ°æ±¾
-    Vector<T>& operator=(Vector<T> const&); //ÖØÔØ¸³Öµ²Ù×÷·û£¬ÒÔ±ãÖ±½Ó¿ËÂ¡ÏòÁ¿
-    T remove(Rank r); //É¾³ıÖÈÎªrµÄÔªËØ
-    int remove(Rank lo, Rank hi); //É¾³ıÖÈÔÚÇø¼ä[lo, hi)Ö®ÄÚµÄÔªËØ
-    Rank insert(Rank r, T const& e); //²åÈëÔªËØ
-    Rank insert(T const& e) { return insert(_size, e); } //Ä¬ÈÏ×÷ÎªÄ©ÔªËØ²åÈë
-    void sort(Rank lo, Rank hi); //¶Ô[lo, hi)ÅÅĞò
-    void sort() { sort(0, _size); } //ÕûÌåÅÅĞò
-    void unsort(Rank lo, Rank hi); //¶Ô[lo, hi)ÖÃÂÒ
-    void unsort() { unsort(0, _size); } //ÕûÌåÖÃÂÒ
-    int deduplicate(); //ÎŞĞòÈ¥ÖØ
-    int uniquify(); //ÓĞĞòÈ¥ÖØ
-        // ±éÀú
-    void traverse(void (*)(T&)); //±éÀú£¨Ê¹ÓÃº¯ÊıÖ¸Õë£¬Ö»¶Á»ò¾Ö²¿ĞÔĞŞ¸Ä£©
+
+    //æ•°ç»„æ•´ä½“å¤åˆ¶
+    Vector(const T* A, Rank n) { copyFrom(A, 0, n); }
+
+    //æ•°ç»„åŒºé—´å¤åˆ¶
+    Vector(const T* A, Rank lo, Rank hi) { copyFrom(A, lo, hi); }
+
+    //å®Œæ•´æ‹·è´æ„é€ å‡½æ•°
+    Vector(const Vector<T>& V) { copyFrom(V._elem, 0, V._size); }
+
+    //åŒºé—´æ‹·è´æ„é€ å‡½æ•°
+    Vector(const Vector<T>& V, Rank lo, Rank hi) { copyFrom(V._elem, lo, hi); }
+
+    //! ææ„å‡½æ•°
+    ~Vector() { delete[] _elem; }
+
+    //! åªè¯»è®¿é—®æ¥å£
+
+    Rank size() const { return _size; }
+
+    bool empty() const { return !_size; }
+
+    //åˆ¤æ–­vectoræ˜¯å¦å·²æ’åº
+    int disordered() const;
+
+    //æ— åºå‘é‡æ•´ä½“æŸ¥æ‰¾
+    Rank find(T const& e) const { return find(e, 0, _size); }
+
+    //æ— é¡»å‘é‡åŒºé—´æŸ¥æ‰¾
+    Rank find(T const& e, Rank lo, Rank hi) const;
+
+    //æœ‰åºå‘é‡æ•´ä½“æŸ¥æ‰¾
+    Rank search(T const& e) const {
+        return (_size <= 0) ? -1 : search(e, 0, _size);
+    }
+
+    //æœ‰åºå‘é‡åŒºé—´æŸ¥æ‰¾
+    Rank search(T const& e, Rank lo, Rank hi) const;
+
+    //! å¯å†™è®¿é—®æ¥å£
+
+    //é‡è½½ä¸‹æ ‡æ“ä½œç¬¦
+    T& operator[](Rank r);
+
+    //é‡è½½èµ‹å€¼æ“ä½œç¬¦ï¼Œä»¥ä¾¿ç›´æ¥å…‹éš†å‘é‡
+    Vector<T>& operator=(Vector<T> const&);
+
+    //åˆ é™¤å…ƒç´ 
+    T remove(Rank r);
+
+    //åŒºé—´åˆ é™¤ [lo,hi)
+    int remove(Rank lo, Rank hi);
+
+    //æ’å…¥å…ƒç´ 
+    Rank insert(Rank r, T const& e);
+
+    //é»˜è®¤ä½œä¸ºå°¾å…ƒç´ æ’å…¥
+    Rank insert(T const& e) { return insert(_size, e); }
+
+    //åŒºé—´æ’åº
+    void sort(Rank lo, Rank hi);
+
+    //æ•´ä½“æ’åº
+    void sort() { sort(0, _size); }
+
+    //åŒºé—´ç½®ä¹±
+    void unsort(Rank lo, Rank hi);
+
+    //æ•´ä½“ç½®ä¹±
+    void unsort() { unsort(0, _size); }
+
+    //æ— åºå»é‡
+    int deduplicate();
+
+    //æœ‰åºå»é‡
+    int uniquify();
+
+    //! éå†
+    //éå†(ä½¿ç”¨å‡½æ•°æŒ‡é’ˆï¼Œåªè¯»æˆ–å±€éƒ¨æ€§ä¿®æ”¹)
+    void traverse(void (*)(T&));
+
+    //éå†(ä½¿ç”¨å‡½æ•°å¯¹è±¡ï¼Œå¯å…¨å±€æ€§ä¿®æ”¹)
     template <typename VST>
-    void traverse(VST&); //±éÀú£¨Ê¹ÓÃº¯Êı¶ÔÏó£¬¿ÉÈ«¾ÖĞÔĞŞ¸Ä£©
-}; //Vector
+    void traverse(VST&);
+
+protected:
+    // Rank _size;
+    // int _capacity;
+    // T* _elem;
+
+    //å¤åˆ¶åŒºé—´A[lo,hi)
+    void copyFrom(T const* A, Rank lo, Rank hi);
+
+    //ç©ºé—´ä¸è¶³æ—¶æ‰©å®¹
+    void expand();
+
+    //è£…å¡«å› å­è¿‡å°æ—¶å‹ç¼©
+    void shrink();
+
+    //æ‰«æäº¤æ¢
+    bool bubble(Rank lo, Rank hi);
+
+    //å†’æ³¡æ’åºç®—æ³•
+    void bubbleSort(Rank lo, Rank hi);
+
+    //é€‰å–æœ€å¤§å…ƒç´ 
+    Rank maxItem(Rank lo, Rank hi);
+
+    //é€‰æ‹©æ’åºç®—æ³•
+    void selectionSort(Rank lo, Rank hi);
+
+    //å½’å¹¶ç®—æ³•
+    void merge(Rank lo, Rank mi, Rank hi);
+
+    //å½’å¹¶æ’åºç®—æ³•
+    void mergeSort(Rank lo, Rank hi);
+
+    //å †æ’åºç®—æ³•
+    void heapSort(Rank lo, Rank hi);
+
+    //è½´ç‚¹partitionæ„é€ ç®—æ³•
+    Rank partition(Rank lo, Rank hi);
+
+    //å¿«é€Ÿæ’åºç®—æ³•
+    void quickSort(Rank lo, Rank hi);
+
+    //å¸Œå°”æ’åºç®—æ³•
+    void shellSort(Rank lo, Rank hi);
+
+private:
+    Rank _size;
+    int _capacity;
+    T* _elem;
+};
 
 template <typename T>
-void Vector<T>::copyFrom(T const *A, Rank lo, Rank hi)
-{
+void Vector<T>::copyFrom(T const* A, Rank lo, Rank hi) {
     _elem = new T[_capacity = 2 * (hi - lo)];
-    _size = 0; //·ÖÅä¿Õ¼ä ¹æÄ£ÇåÁã
-    while (lo < hi)
-    {
+    _size = 0; //åˆ†é…ç©ºé—´ï¼Œè§„æ¨¡æ¸…é›¶
+    while (lo < hi) {
         _elem[size++] = A[lo++];
     }
 }
 
+//* ç”±äºvectorå†…éƒ¨æœ‰åŠ¨æ€åˆ†é…çš„ç©ºé—´ï¼Œé»˜è®¤çš„=è¿ç®—ç¬¦ä¸è¶³ä»¥æ”¯æŒå‘é‡ä¹‹é—´çš„ç›´æ¥èµ‹å€¼
 template <typename T>
-Vector<T> &Vector<T>::operator=(const Vector<T> &V)
-{
+Vector<T>& Vector<T>::operator=(const Vector<T>& V) {
     if (_elem)
-        delete[] _elem;
+        delete[] _elem; //é‡Šæ”¾åŸæœ‰å†…å®¹
     copyFrom(V._elem, 0, V.size());
     return *this;
 }
 
 template <typename T>
-void Vector<T>::expand()
-{
+void Vector<T>::expand() {
     if (_size < _capacity)
         return;
     if (_capacity < DEFAULT_CAPACITY)
         _capacity = DEFAULT_CAPACITY;
-    T *oldElem = _elem;
+    T* oldElem = _elem;
     _elem = new T[_capacity <<= 1];
     for (int i = 0; i < _size; ++i)
         _elem[i] = oldElem[i];
@@ -103,13 +181,12 @@ void Vector<T>::expand()
 }
 
 template <typename T>
-void Vector<T>::shrink()
-{
+void Vector<T>::shrink() {
     if (_capacity < DEFAULT_CAPACITY << 1)
         return;
     if (_size << 2 > _capacity)
         return;
-    T *oldElem = _elem;
+    T* oldElem = _elem;
     _elem = new T[_capacity >>= 1];
     for (int i = 0; i < _size; ++i)
         _elem[i] = oldElem[i];
@@ -117,53 +194,48 @@ void Vector<T>::shrink()
 }
 
 template <typename T>
-T &Vector<T>::operator[](Rank r)
-{
+T& Vector<T>::operator[](Rank r) {
     return _elem[r];
 }
 
 template <typename T>
-void Vector<T>::unsort(Rank lo, Rank hi)
-{
-    T *V = _elem + lo;
+void Vector<T>::unsort(Rank lo, Rank hi) {
+    T* V = _elem + lo;
     for (Rank i = hi - lo; i > 0; --i)
-        std::swap(V[i - 1], V[rand() % i]);
+        swap(V[i - 1], V[rand() % i]);
 }
 
 template <typename T>
-static bool lt(T *a, T *b)
-{
+static bool lt(T* a, T* b) {
     return lt(*a, *b);
 }
 
 template <typename T>
-bool lt(const T &a, const T &b)
-{
+bool lt(const T& a, const T& b) {
     return a < b;
 }
 
 template <typename T>
-static bool eq(T *a, T *b)
-{
+static bool eq(T* a, T* b) {
     return eq(*a, *b);
 }
 
 template <typename T>
-static bool eq(const T &a, const T &b)
-{
+static bool eq(const T& a, const T& b) {
     return a == b;
 }
 
-template <typename T> //ÎŞĞèÏòÁ¿µÄË³Ğò²éÕÒ£º·µ»Ø×îºóÒ»¸öÔªËØeµÄÎ»ÖÃ£»Ê§°ÜÊ±£¬·µ»Ølo-1
-Rank Vector<T>::find(const T &e, Rank lo, Rank hi) const
-{
+//è¿”å›æœ€åä¸€ä¸ªå…ƒç´ eçš„ä½ç½®
+template <typename T>
+Rank Vector<T>::find(const T& e, Rank lo, Rank hi) const {
     while ((lo < hi--) && (e != _elem[hi]))
-        return hi; //Èôhi<lo ÔòÒâÎ¶×ÅÊ§°Ü ·ñÔòhi¼´ÃüÖĞÔªËØµÄÖÈ
+        ;
+    return hi;
 }
 
+//å°†å…ƒç´ eä½œä¸ºç§©ä¸ºrçš„å…ƒç´ æ’å…¥
 template <typename T>
-Rank Vector<T>::insert(Rank r, const T &e)
-{
+Rank Vector<T>::insert(Rank r, const T& e) {
     this->expand();
     for (int i = _size; i > r; --i)
         _elem[i] = _elem[i - 1];
@@ -174,28 +246,29 @@ Rank Vector<T>::insert(Rank r, const T &e)
 }
 
 template <typename T>
-int Vector<T>::remove(Rank lo, Rank hi)
-{
+int Vector<T>::remove(Rank lo, Rank hi) {
     if (lo == hi)
         return 0;
+    
+    //[hi,_size)é¡ºæ¬¡å‰ç§»hi-loä¸ªå•å…ƒ
     while (hi < _size)
-        _elem[lo++] = _elem[hi++]; //Ãî°¡£¬Å£±Æ¿ËÀ­Ë¹
+        _elem[lo++] = _elem[hi++];
     _size = lo;
     this->shrink();
-    return hi - lo; //·µ»Ø±»É¾³ıÔªËØµÄÊıÄ¿
+
+    return hi - lo; //è¿”å›è¢«åˆ é™¤å…ƒç´ çš„æ•°ç›®
 }
 
 template <typename T>
-T Vector<T>::remove(Rank r)
-{
+T Vector<T>::remove(Rank r) {
     T e = _elem[r];
     this->remove(r, r + 1);
-    return e; //·µ»Ø±»É¾³ıÔªËØ
+    return e;   //è¿”å›è¢«åˆ é™¤çš„å…ƒç´ 
 }
 
-template <typename T> //Ãî°¡Ü³
-int Vector<T>::deduplicate()
-{
+//åˆ é™¤æ— é¡»å‘é‡ä¸­çš„é‡å¤å…ƒç´ 
+template <typename T>
+int Vector<T>::deduplicate() {
     int oldSize = _size;
     Rank i = 1;
     while (i < _size)
@@ -205,50 +278,42 @@ int Vector<T>::deduplicate()
 
 template <typename T>
 template <typename VST>
-void Vector<T>::traverse(VST &visit)
-{
+void Vector<T>::traverse(VST& visit) {
     for (int i = 0; i < _size; ++i)
-        visit(_elem[i]); //½èÖúº¯Êı¶ÔÏóÊµÏÖ£¬Ãî°¡
+        visit(_elem[i]); //éå†vector
 }
 
-struct Increase
-{
+struct Increase {
     template <typename T>
-    void operator()(T &e)
-    {
+    void operator()(T& e) {
         ++e;
     }
 };
 
 template <typename T>
-void increase(Vector<T> &V)
-{
+void increase(Vector<T>& V) {
     Increase i;
     V.traverse(i);
 }
 
-struct Decrease
-{
+struct Decrease {
     template <typename T>
-    void operator()(T &e)
-    {
+    void operator()(T& e) {
         --e;
     }
 };
 
 template <typename T>
-void decrease(Vector<T> &V)
-{
+void decrease(Vector<T>& V) {
     Decrease d;
     V.traverse(d);
 }
 
+//è¿”å›vectorä¸­é€†åºç›¸é‚»å…ƒç´ å¯¹çš„æ€»æ•°
 template <typename T>
-int Vector<T>::disordered()const
-{ //·µ»ØÏòÁ¿ÖĞÄæĞòÏàÁÚÔªËØ¶ÔµÄ×ÜÊı
+int Vector<T>::disordered() const {
     int n = 0;
-    for (int i = 1; i < _size; ++i)
-    {
+    for (int i = 1; i < _size; ++i) {
         if (_elem[i - 1] > _elem[i])
             ++n;
     }
@@ -256,11 +321,9 @@ int Vector<T>::disordered()const
 }
 
 template <typename T>
-int Vector<T>::uniquify()
-{
+int Vector<T>::uniquify() {
     Rank i = 0, j = 0;
-    while (++j < _size)
-    {
+    while (++j < _size) {
         if (_elem[i] != _elem[j])
             _elem[++i] = _elem[j];
     }
@@ -271,12 +334,10 @@ int Vector<T>::uniquify()
 }
 
 template <typename T>
-static Rank binSearch(T *A, const T &e, Rank lo, Rank hi)
-{
-    while (lo < hi)
-    {
+static Rank binSearch(T* A, const T& e, Rank lo, Rank hi) {
+    while (lo < hi) {
         Rank mi = (lo + hi) >> 1;
-        if (e < A[mi])
+        if (A[mi] > e)
             hi = mi;
         else if (A[mi] < e)
             lo = mi + 1;
@@ -286,39 +347,34 @@ static Rank binSearch(T *A, const T &e, Rank lo, Rank hi)
     return -1;
 }
 
-class Fib
-{ //FibonacciÊıÁĞÀà
+class Fib { // Fibonacciï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 private:
-    int f, g; //f = fib(k - 1), g = fib(k)¡£¾ùÎªintĞÍ£¬ºÜ¿ì¾Í»áÊıÖµÒç³ö
+    int f, g; // f = fib(k - 1), g = fib(k)ï¿½ï¿½ï¿½ï¿½Îªintï¿½Í£ï¿½ï¿½Ü¿ï¿½Í»ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½
 public:
-    Fib(int n) //³õÊ¼»¯Îª²»Ğ¡ÓÚnµÄ×îĞ¡FibonacciÏî
+    Fib(int n) //ï¿½ï¿½Ê¼ï¿½ï¿½Îªï¿½ï¿½Ğ¡ï¿½ï¿½nï¿½ï¿½ï¿½ï¿½Ğ¡Fibonacciï¿½ï¿½
     {
         f = 1;
         g = 0;
         while (g < n)
             next();
-    }                       //fib(-1), fib(0)£¬O(log_phi(n))Ê±¼ä
-    int get() { return g; } //»ñÈ¡µ±Ç°FibonacciÏî£¬O(1)Ê±¼ä
-    int next()
-    {
+    }                       // fib(-1), fib(0)ï¿½ï¿½O(log_phi(n))Ê±ï¿½ï¿½
+    int get() { return g; } //ï¿½ï¿½È¡ï¿½ï¿½Ç°Fibonacciï¿½î£¬O(1)Ê±ï¿½ï¿½
+    int next() {
         g += f;
         f = g - f;
         return g;
-    } //×ªÖÁÏÂÒ»FibonacciÏî£¬O(1)Ê±¼ä
-    int prev()
-    {
+    } //×ªï¿½ï¿½ï¿½ï¿½Ò»Fibonacciï¿½î£¬O(1)Ê±ï¿½ï¿½
+    int prev() {
         f = g - f;
         g -= f;
         return g;
-    } //×ªÖÁÉÏÒ»FibonacciÏî£¬O(1)Ê±¼ä
+    } //×ªï¿½ï¿½ï¿½ï¿½Ò»Fibonacciï¿½î£¬O(1)Ê±ï¿½ï¿½
 };
 
 template <typename T>
-static Rank fibSearch(T *A, const T &e, Rank lo, Rank hi)
-{
+static Rank fibSearch(T* A, const T& e, Rank lo, Rank hi) {
     Fib fib(hi - lo);
-    while (lo < hi)
-    {
+    while (lo < hi) {
         while (hi - lo < fib.get())
             fib.prev();
         Rank mi = lo + fib.get() - 1;
@@ -332,16 +388,13 @@ static Rank fibSearch(T *A, const T &e, Rank lo, Rank hi)
 }
 
 template <typename T>
-Rank Vector<T>::search(const T &e, Rank lo, Rank hi) const
-{
+Rank Vector<T>::search(const T& e, Rank lo, Rank hi) const {
     return (rand() % 2) ? binSearch(_elem, e, lo, hi) : fibSearch(_elem, e, lo, hi);
 }
 
 template <typename T>
-void Vector<T>::sort(Rank lo, Rank hi)
-{
-    switch (rand() % 2)
-    {
+void Vector<T>::sort(Rank lo, Rank hi) {
+    switch (rand() % 2) {
     case 1:
         bubbleSort(lo, hi);
         break;
@@ -362,20 +415,16 @@ void Vector<T>::sort(Rank lo, Rank hi)
 }
 
 template <typename T>
-void Vector<T>::bubbleSort(Rank lo, Rank hi)
-{
+void Vector<T>::bubbleSort(Rank lo, Rank hi) {
     while (!bubble(lo, hi))
         ;
 }
 
 template <typename T>
-bool Vector<T>::bubble(Rank lo, Rank hi)
-{
+bool Vector<T>::bubble(Rank lo, Rank hi) {
     bool sorted = true;
-    while (++lo < hi)
-    {
-        if (_elem[lo - 1] > _elem[lo])
-        {
+    while (++lo < hi) {
+        if (_elem[lo - 1] > _elem[lo]) {
             sorted = false;
             swap(_elem[lo - 1], _elem[lo]);
         }
@@ -384,8 +433,7 @@ bool Vector<T>::bubble(Rank lo, Rank hi)
 }
 
 template <typename T>
-void Vector<T>::mergeSort(Rank lo, Rank hi)
-{
+void Vector<T>::mergeSort(Rank lo, Rank hi) {
     if (hi - lo < 2)
         return;
     int mi = (lo + hi) / 2;
@@ -395,17 +443,15 @@ void Vector<T>::mergeSort(Rank lo, Rank hi)
 }
 
 template <typename T>
-void Vector<T>::merge(Rank lo, Rank mi, Rank hi)
-{
-    T *A = _elem + lo;
+void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
+    T* A = _elem + lo;
     int lb = mi - lo;
-    T *B = new T[lb];
+    T* B = new T[lb];
     for (Rank i = 0; i < lb; ++i)
         B[i] = A[i];
     int lc = hi - mi;
-    T *C = _elem + mi;
-    for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc);)
-    {
+    T* C = _elem + mi;
+    for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc);) {
         if ((j < lb) && (!(k < lc) || (B[j] <= C[k])))
             A[i++] = B[j++];
         if ((k < lc) && (!(j < lb) || (C[k] < B[j])))

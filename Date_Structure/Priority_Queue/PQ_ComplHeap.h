@@ -1,34 +1,34 @@
 #include "PQ.h"
-#include "vector.h"
+#include "../Vector/vector.h"
 
-#define InHeap(n, i) (((-1) < (i)) && ((i) < (n))) //ÅÐ¶ÏPQ[i]ÊÇ·ñºÏ·¨
-#define Parent(i) ((i - 1) >> 1) //PQ[i]µÄ¸¸½Úµã
+#define InHeap(n, i) (((-1) < (i)) && ((i) < (n))) //ï¿½Ð¶ï¿½PQ[i]ï¿½Ç·ï¿½Ï·ï¿½
+#define Parent(i) ((i - 1) >> 1) //PQ[i]ï¿½Ä¸ï¿½ï¿½Úµï¿½
 
-//ÍêÈ«¶þ²æ¶ÑÒ»¸ö½Úµã±ØÈ»ÓÐÁ½¸öº¢×Ó£¬nÊÇÓÒ±ßµÄ£¬n-1ÊÇ×ó±ßµÄ£¬ËùÒÔÊÇn-1µÄparent
-#define LastInternal(n) Parent(n - 1) //×îºóÒ»¸öÄÚ²¿½Úµã£¬¼´Ä©½ÚµãµÄ¸¸Ç×
-#define LChild(i) (1 + ((i) << 1)) //PQ[i]µÄ×óº¢×Ó
-#define RChild(i) ((1 + (i)) << 1) //PQ[i]µÄÓÒº¢×Ó
-#define ParentValid(i) (0 < i) //ÅÐ¶ÏPQ[i]ÊÇ·ñÓÐ¸¸Ç×
-#define LChildValid(n, i) InHeap(n, LChild(i)) //ÅÐ¶ÏPQ[i]ÊÇ·ñÓÐÒ»¸ö×óº¢×Ó
-#define RChildValid(n, i) InHeap(n, RChild(i)) //ÅÐ¶ÏPQ[i]ÊÇ·ñÓÐÁ½¸öº¢×Ó
-#define Bigger(PQ, i, j) (lt(PQ[i], PQ[j]) ? j : i) //È¡´óÕß
+//ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Úµï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½nï¿½ï¿½ï¿½Ò±ßµÄ£ï¿½n-1ï¿½ï¿½ï¿½ï¿½ßµÄ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½n-1ï¿½ï¿½parent
+#define LastInternal(n) Parent(n - 1) //ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ú²ï¿½ï¿½Úµã£¬ï¿½ï¿½Ä©ï¿½Úµï¿½Ä¸ï¿½ï¿½ï¿½
+#define LChild(i) (1 + ((i) << 1)) //PQ[i]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define RChild(i) ((1 + (i)) << 1) //PQ[i]ï¿½ï¿½ï¿½Òºï¿½ï¿½ï¿½
+#define ParentValid(i) (0 < i) //ï¿½Ð¶ï¿½PQ[i]ï¿½Ç·ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½
+#define LChildValid(n, i) InHeap(n, LChild(i)) //ï¿½Ð¶ï¿½PQ[i]ï¿½Ç·ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define RChildValid(n, i) InHeap(n, RChild(i)) //ï¿½Ð¶ï¿½PQ[i]ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define Bigger(PQ, i, j) (lt(PQ[i], PQ[j]) ? j : i) //È¡ï¿½ï¿½ï¿½ï¿½
 
-//¸¸×Ó(ÖÁ¶à)ÈýÕßÖÐµÄ´óÕß
+//ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ´ï¿½ï¿½ï¿½
 #define ProperParent(PQ, n, i)                                          \
         (RChildValid(n,i)? Bigger(PQ,Bigger(PQ,i,LChild(i)),Rchild(i)):\
         (LchildValid(n,i)?Bigger(PQ,i,LChild(i):i\
         )\
-        )   //ÏàµÈÊ±¸¸½ÚµãÓÅÏÈ£¬Èç´Ë¿É±ÜÃâ²»±ØÒªµÄ½»»»
+        )   //ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½ï¿½Ë¿É±ï¿½ï¿½â²»ï¿½ï¿½Òªï¿½Ä½ï¿½ï¿½ï¿½
 
 template <typename T>
 class PQ_ComplHeap : public PQ<T>, public Vector<T> {
 protected:
-    Rank percolateDown(Rank n, Rank i); //ÏÂÂË
-    Rank percolateUp(Rank i); //ÉÏÂË
-    void heapify(Rank n); //Floyd½¨¶ÑËã·¨
+    Rank percolateDown(Rank n, Rank i); //ï¿½ï¿½ï¿½ï¿½
+    Rank percolateUp(Rank i); //ï¿½ï¿½ï¿½ï¿½
+    void heapify(Rank n); //Floydï¿½ï¿½ï¿½ï¿½ï¿½ã·¨
 public:
     PQ_ComplHeap() { }
-    //ÅúÁ¿¹¹Ôì
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     PQ_ComplHeap(T* A, Rank n)
     {
         copyFrom(A, 0, n);
@@ -45,19 +45,19 @@ T PQ_ComplHeap<T>::getMax() { return _elem[0]; }
 template <typename T>
 void PQ_ComplHeap<T>::insert(T e)
 {
-    Vector<T>::insert(e); //Ê×ÏÈ½«ÐÂ´ÊÌõ½Óµ½ÏòÁ¿Ä©Î²
-    percolateUp(_size - 1); //ÔÙ¶Ô¸Ã´ÊÌõÊµÊ©ÉÏÂËµ÷Õû
+    Vector<T>::insert(e); //ï¿½ï¿½ï¿½È½ï¿½ï¿½Â´ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½Ä©Î²
+    percolateUp(_size - 1); //ï¿½Ù¶Ô¸Ã´ï¿½ï¿½ï¿½ÊµÊ©ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½
 }
 
 template <typename T>
 Rank PQ_ComplHeap<T>::percolateUp(Rank i)
 {
     while (ParentValid(i)) {
-        //Ö»ÒªiÓÐ¸¸Ç×(ÉÐÎ´µ½´ï¶Ñ¶¥)
+        //Ö»Òªiï¿½Ð¸ï¿½ï¿½ï¿½(ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½Ñ¶ï¿½)
         Rank j = Parent(i);
         if (lt(_elem[i], _elem[j]))
-            break; //Ò»µ©µ±Ç°iÐ¡ÓÚËûµù£¬ÉÏÂËËæ¼´Íê³É
-        swap(_elem[i], _elem[j]); //·ñÔò½»»»¸¸×Ó£¬²¢ÇÒ¼ÌÐø¿¼²ìÉÏÃæÒ»²ã
+            break; //Ò»ï¿½ï¿½ï¿½ï¿½Ç°iÐ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ¼´ï¿½ï¿½ï¿½
+        swap(_elem[i], _elem[j]); //ï¿½ï¿½ï¿½ò½»»ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
         i = j;
     }
     return i;
@@ -66,10 +66,10 @@ Rank PQ_ComplHeap<T>::percolateUp(Rank i)
 template <typename T>
 T PQ_ComplHeap<T>::delMax()
 {
-    //Õª³ý¶Ñ¶¥£¬´úÖ®ÒÔÄ©´ÊÌõ
+    //Õªï¿½ï¿½ï¿½Ñ¶ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Ä©ï¿½ï¿½ï¿½ï¿½
     T maxElem = _elem[0];
     _elem[0] = _elem[--this->_size];
-    //¶ÔÐÂ¶ÑÊµÊ©ÏÂÂË
+    //ï¿½ï¿½ï¿½Â¶ï¿½ÊµÊ©ï¿½ï¿½ï¿½ï¿½
     percolateDown(_size, 0);
     return maxElem;
 }
@@ -78,7 +78,7 @@ template <typename T>
 Rank PQ_ComplHeap<T>::percolateDown(Rank n, Rank i)
 {
     Rank j;
-    //ProperParent·µ»Ø_elemÖÐi´¦×î´óµÄÄÇÒ»¸ö,×óÓÒº¢×Ó¶¼²»´æÔÚµÄÊ±ºòºÍ×Ô¼º×î´óµÄÊ±ºò£¬·µ»Ø×Ô¼º
+    //ProperParentï¿½ï¿½ï¿½ï¿½_elemï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½,ï¿½ï¿½ï¿½Òºï¿½ï¿½Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ò£¬·ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½
     while (i != (j = ProperParent(_elem, n, i))) {
         swap(_elem[i], _elem[j]);
         i = j;
@@ -86,7 +86,7 @@ Rank PQ_ComplHeap<T>::percolateDown(Rank n, Rank i)
     return i;
 }
 
-//Floyd½¨¶ÑËã·¨
+//Floydï¿½ï¿½ï¿½ï¿½ï¿½ã·¨
 template <typename T>
 void PQ_ComplHeap<T>::heapify(Rank n)
 {
