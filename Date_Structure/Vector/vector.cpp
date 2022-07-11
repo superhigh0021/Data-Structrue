@@ -1,10 +1,7 @@
-#include <iostream>
-#include <algorithm>
 #include "vector.h"
-using namespace std;
 
-typedef int Rank;          //��
-#define DEFAULT_CAPACITY 3 //Ĭ�ϳ�ʼ����
+typedef int Rank;
+#define DEFAULT_CAPACITY 3
 
 void testIncrease()
 {

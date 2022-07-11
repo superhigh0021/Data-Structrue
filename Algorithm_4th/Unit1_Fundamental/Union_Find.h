@@ -5,9 +5,9 @@ using namespace std;
 class Union_Find
 {
 private:
-    int count = 0;  //连通分量的个数
-    vector<int> id; //树根位置的数组
-    vector<int> sz; //树根权重数组
+    int count = 0;  
+    vector<int> id; 
+    vector<int> sz; 
 
 public:
     Union_Find(const int &N) : count(N)
@@ -33,7 +33,7 @@ public:
         int Pid = find(p), Qid = find(q);
         if (sz[Pid] <= sz[Qid])
         {
-            //小根依附于大根
+            
             sz[Qid] += sz[Pid];
             id[Pid] = Qid;
         }
