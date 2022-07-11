@@ -1,56 +1,24 @@
 #include <iostream>
-using namespace std;
 #include <vector>
+using namespace std;
 
-// template <typename T>
-// int partition(vector<T> &v, int lo, int hi) {
-//     //swap(v[lo], v[lo + rand() % (hi - lo + 1)]);
-//     T pivot = v[lo];  //�����ѡȡ
-//     while (lo < hi) {
-//         while ((lo < hi) && (pivot <= v[hi])) hi--;
-//         v[lo] = v[hi];
-//         while ((lo < hi) && (v[lo] <= pivot)) lo++;
-//         v[hi] = v[lo];
-//     }
-//     v[lo]=pivot;
-//     return lo;
-// }
-
-// template <typename T>
-// void QuickSort(vector<T> &v, int lo, int hi) {
-//     if (hi - lo < 2) return;
-//     int mi = partition(v, lo, hi);
-//     QuickSort(v,lo, mi);
-//     QuickSort(v,mi + 1, hi);
-// }
-
-template <typename T>
-int partition(vector<T>& v, int lo, int hi) {
-    T pivot = v[lo];
-    while (lo < hi) {
-        while (lo < hi && v[hi] >= pivot) --hi;
-        v[lo] = v[hi];
-        while (lo < hi && v[lo] <= pivot) ++lo;
-        v[hi] = v[lo];
-    }
-    v[lo] = pivot;
-    return lo;
+int partition(vector<int>& vec, int lo, int hi) {
+    int pivot = vec[hi], temp = lo - 1;
+    for (int i = lo; i < hi; ++i)
+        if (vec[i] <= pivot)
+            swap(vec[++temp], vec[i]);
+    swap(vec[temp + 1], vec[hi]);
+    return temp + 1;
 }
 
-template <typename T>
-void QuickSort(vector<T>& v, int lo, int hi) {
-    if (hi - lo < 2) return;
-    int mi=partition(v,lo,hi);
-    QuickSort(v,lo,mi);
-    QuickSort(v,mi+1,hi);
+void quickSort(vector<int>& vec, int lo, int hi) {
+    if (lo >= hi)
+        return;
+    int pivot = partition(vec, lo, hi);
+    quickSort(vec, lo, pivot - 1);
+    quickSort(vec, pivot + 1, hi);
 }
 
-int main(void) {
-    vector<int> v = {5, 72, 696, 51, 26, 83, 45, 2, 54};
-    QuickSort(v, 0, v.size() - 1);
-
-    for (auto i : v) cout << i << ' ';
-
-
-    return 0;
+void quickSort(vector<int>& vec) {
+    quickSort(vec, 0, vec.size() - 1);
 }
